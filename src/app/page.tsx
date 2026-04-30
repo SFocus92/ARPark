@@ -21,9 +21,41 @@ import { ErrorScreen } from '@/components/ar/error-screen';
 import { useQuest } from '@/hooks/use-quest';
 
 // =====================================================
+// ЗАГРУЗКА A-FRAME + AR.JS NFT (ВНЕ КОМПОНЕНТА)
+// =====================================================
+
+function loadARLibs(): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if ((window as any).AFRAME) {
+      resolve();
+      return;
+    }
+    
+    const loadScript = (src: string) => new Promise<void>((res, rej) => {
+      if (document.querySelector(`script[src="${src}"]`)) {
+        res();
+        return;
+      }
+      const s = document.createElement('script');
+      s.src = src;
+      s.async = true;
+      s.onload = () => res();
+      s.onerror = () => rej(new Error(`Failed to load ${src}`));
+      document.head.appendChild(s);
+    });
+    
+    Promise.all([
+      loadScript('https://aframe.io/releases/1.4.0/aframe.min.js'),
+      loadScript('https://cdn.jsdelivr.net/npm/aframe-nft-component@0.2.1/dist/aframe-nft-component.min.js'),
+    ])
+      .then(() => resolve())
+      .catch(reject);
+  });
+}
+
+// =====================================================
 // ДИНАМИЧЕСКИЙ ИМПОРТ AR-СЦЕНЫ (SSR = false)
 // =====================================================
-// A-Frame работает только в браузере, поэтому отключаем SSR
 
 const ARScene = dynamic(
   () => import('@/components/ar/ar-scene').then(mod => mod.ARScene),
