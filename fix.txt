@@ -1,182 +1,52 @@
-MindAR не найден в window  
-lockdown-install.js:1 SES Removing unpermitted intrinsics
-0xiv20y~ibtfh.js:22 [AR] Загрузка A-Frame...
+SES Removing unpermitted intrinsics
+0~2c01.nu67-l.js:22 [AR] Загрузка A-Frame...
 index.js:95 A-Frame Version: 1.4.0 (Date 2022-12-26, Commit #60a324a2)
 index.js:96 THREE Version (https://github.com/supermedium/three.js): ^0.147.0
 index.js:98 WebVR Polyfill Version: ^0.10.12
-0xiv20y~ibtfh.js:22 [AR] A-Frame загружен
-0vgim_g55tw9-.js:1 [AR] A-Frame готов
-0vgim_g55tw9-.js:1 [AR] THREE готов
-(index):1 Uncaught TypeError: Failed to resolve module specifier "three". Relative references must start with either "/", "./", or "../".
-0vgim_g55tw9-.js:1 [AR] MindAR script загружен
-0vgim_g55tw9-.js:1 [AR] ❌ Ошибка: Error: MindAR не найден в window
-    at t (0vgim_g55tw9-.js:1:9446)
-t @ 0vgim_g55tw9-.js:1
-await in t
-(anonymous) @ 0vgim_g55tw9-.js:1
-iv @ 0~_1x27hmki5g.js:1
-e @ 0~_1x27hmki5g.js:1
-e @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-ud @ 0~_1x27hmki5g.js:1
-up @ 0~_1x27hmki5g.js:1
-sx @ 0~_1x27hmki5g.js:1
-(anonymous) @ 0~_1x27hmki5g.js:1
-O @ 0~_1x27hmki5g.js:1
-postMessage
-i @ 0~_1x27hmki5g.js:1
-(anonymous) @ 0~_1x27hmki5g.js:1
-(anonymous) @ 0~_1x27hmki5g.js:1
-sv @ 0~_1x27hmki5g.js:1
-st @ 0~_1x27hmki5g.js:1
-setTimeout
-se @ 0~_1x27hmki5g.js:1
-s$ @ 0~_1x27hmki5g.js:1
-O @ 0~_1x27hmki5g.js:1
-postMessage
-i @ 0~_1x27hmki5g.js:1
-O @ 0~_1x27hmki5g.js:1
-postMessage
-i @ 0~_1x27hmki5g.js:1
-(anonymous) @ 0~_1x27hmki5g.js:1
-(anonymous) @ 0~_1x27hmki5g.js:1
-sv @ 0~_1x27hmki5g.js:1
-st @ 0~_1x27hmki5g.js:1
-se @ 0~_1x27hmki5g.js:1
-sQ @ 0~_1x27hmki5g.js:1
-sU @ 0~_1x27hmki5g.js:1
-sV @ 0~_1x27hmki5g.js:1
-(anonymous) @ 0~_1x27hmki5g.js:1
-setTimeout
-(anonymous) @ 0xiv20y~ibtfh.js:17
-h @ 0xiv20y~ibtfh.js:17
-sJ @ 0~_1x27hmki5g.js:1
-(anonymous) @ 0~_1x27hmki5g.js:1
-tD @ 0~_1x27hmki5g.js:1
-s4 @ 0~_1x27hmki5g.js:1
-fz @ 0~_1x27hmki5g.js:1
-fT @ 0~_1x27hmki5g.js:1
+0~2c01.nu67-l.js:22 [AR] A-Frame загружен
+0l8lxpdgjs1qg.js:1 [AR] A-Frame готов
+0l8lxpdgjs1qg.js:1 [AR] Targets: marker-1,marker-2,marker-3,marker-4,marker-5,marker-6,marker-7
+mindar-image-aframe.js:20726 
+ GET https://ar-quest-sevapark.vercel.app/assets/nft/marker-1,marker-2,marker-3,marker-4,marker-5,marker-6,marker-7.mind 404 (Not Found)
+mindar-image-aframe.js:20716 Uncaught (in promise) RangeError: Extra 13536 of 13537 byte(s) found at buffer[1]
+    at n.createExtraByteError (mindar-image-aframe.js:20716:25913)
+    at n.decode (mindar-image-aframe.js:20716:26167)
+    at L_ (mindar-image-aframe.js:20716:34464)
+    at ZI.importData (mindar-image-aframe.js:20716:35662)
+    at _I.addImageTargetsFromBuffer (mindar-image-aframe.js:20726:2411)
+    at mindar-image-aframe.js:20726:2329
+n.createExtraByteError	@	mindar-image-aframe.js:20716
+n.decode	@	mindar-image-aframe.js:20716
+L_	@	mindar-image-aframe.js:20716
+importData	@	mindar-image-aframe.js:20716
+addImageTargetsFromBuffer	@	mindar-image-aframe.js:20726
+(anonymous)	@	mindar-image-aframe.js:20726
+await in (anonymous)		
+addImageTargets	@	mindar-image-aframe.js:20726
+_startAR	@	mindar-image-aframe.js:20756
+(anonymous)	@	mindar-image-aframe.js:20756 
+Проблема найдена! MindAR ожидает **каждый `.mind` файл отдельно**, а ты передаёшь их одной строкой через запятую.
 
-Две ошибки:
-
-1. **`Failed to resolve module specifier "three"`** — MindAR внутри себя делает `import ... from "three"`, но не может найти THREE
-2. **MindAR не в window** — потому что ESM-модуль не создаёт глобальную переменную
-
-Нужно использовать **правильную UMD-сборку MindAR**, которая работает с глобальным THREE из A-Frame.
-
-## Быстрое решение:
-
-### 1. Скачай правильную версию MindAR
-
-Выполни в PowerShell:
-
-```powershell
-cd D:\ar-quest-sevapark
-
-# Удали старый файл
-Remove-Item "public\js\mindar-image-three.prod.js" -ErrorAction SilentlyContinue
-
-# Скачай версию, которая работает с глобальным THREE
-Invoke-WebRequest -Uri "https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.umd.js" -OutFile "public\js\mindar-image-three.js"
+## Ошибка:
 ```
-
-Если 404 — попробуй этот:
-
-```powershell
-Invoke-WebRequest -Uri "https://unpkg.com/mind-ar@1.2.5/dist/mindar-image-three.umd.js" -OutFile "public\js\mindar-image-three.js"
+GET /assets/nft/marker-1,marker-2,marker-3,...,marker-7.mind 404
 ```
+MindAR пытается загрузить **один файл** с именем `marker-1,marker-2,...,marker-7.mind`.
 
-### 2. Замени `ar-scene.tsx` на рабочую версию:
+## Решение:
+
+MindAR A-Frame компонент принимает `imageTargetSrc` как **URL к одному `.mind` файлу**. Для нескольких маркеров нужно использовать другой подход — либо:
+
+Точно! Квест с 7 этапами, и каждый маркер должен быть **отдельным фото реального объекта в парке** — скамейка, дерево, статуя и т.д. Поэтому один файл `targets.mind` не подойдёт — все маркеры смешаются.
+
+Нужно **загрузить 7 отдельных `.mind` файлов**. MindAR A-Frame компонент не поддерживает массив, но можно загружать через **JS API напрямую**.
+
+## Правильное решение: MindAR JS API + отдельные маркеры
+
+Вот исправленный `ar-scene.tsx`, который:
+- Загружает MindAR **без A-Frame компонента**
+- Загружает **каждый `.mind` файл отдельно** через `addImageTargets`
+- Обрабатывает `targetIndex` для каждого маркера
 
 ```tsx
 'use client';
@@ -185,14 +55,27 @@ import { useEffect, useRef, useState } from 'react';
 import { useQuest } from '@/hooks/use-quest';
 import { STEPS, QuestStep } from '@/lib/quest-config';
 
-export function ARScene({ onReady, onError }: { onReady?: () => void; onError?: (e: string) => void }) {
+interface ARSceneProps {
+  onReady?: () => void;
+  onError?: (error: string) => void;
+}
+
+export function ARScene({ onReady, onError }: ARSceneProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [status, setStatus] = useState('Инициализация...');
   const [error, setError] = useState<string | null>(null);
   const initRef = useRef(false);
+  const scannerRef = useRef<any>(null);
 
-  const { handleMarkerFound, setCameraReady, setCameraError, currentMarker, showingContent, completedSteps } = useQuest();
+  const {
+    handleMarkerFound,
+    setCameraReady,
+    setCameraError,
+    currentMarker,
+    showingContent,
+    completedSteps,
+  } = useQuest();
 
   useEffect(() => {
     if (initRef.current) return;
@@ -200,39 +83,64 @@ export function ARScene({ onReady, onError }: { onReady?: () => void; onError?: 
 
     async function init() {
       try {
-        // 1. Ждём A-Frame + THREE
+        // 1. Ждём A-Frame (даёт нам THREE)
         setStatus('Ожидание A-Frame...');
-        await waitFor(() => !!(window as any).AFRAME, 10000);
-        console.log('[AR] A-Frame готов');
+        await waitForGlobal('AFRAME', 15000);
+        await waitForGlobal('THREE', 5000);
+        console.log('[AR] A-Frame + THREE готовы');
 
-        setStatus('Ожидание THREE.js...');
-        await waitFor(() => !!(window as any).THREE, 5000);
-        console.log('[AR] THREE готов');
-
-        // 2. Грузим MindAR UMD (он ищет THREE в window)
+        // 2. Загружаем MindAR (НЕ A-Frame версию, а THREE версию)
         setStatus('Загрузка MindAR...');
-        await loadScript('/js/mindar-image-three.js');
-        console.log('[AR] MindAR загружен');
+        
+        // Используем динамический импорт ESM модуля
+        const mindarModule = await import(
+          'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js'
+        );
 
-        await waitFor(() => !!(window as any).MINDAR, 5000);
-        console.log('[AR] MINDAR в window:', !!(window as any).MINDAR);
+        // Ищем конструктор
+        const MindARImage = 
+          mindarModule.MindARImage || 
+          mindarModule.default?.MindARImage ||
+          (mindarModule as any).default;
+        
+        if (!MindARImage) {
+          throw new Error('MindARImage не найден в модуле');
+        }
 
-        const MINDAR = (window as any).MINDAR;
-        const MindARImage = MINDAR.MindARImage || MINDAR.Image || MINDAR;
+        console.log('[AR] MindAR модуль загружен');
 
-        // 3. Список маркеров
-        const targets = STEPS.filter(s => s.markerType === 'nft').map(s => s.nftDescriptor!);
-        console.log('[AR] Маркеры:', targets);
-
-        // 4. Создаём сканер
+        // 3. Создаём сканер с ПЕРВЫМ маркером
+        const firstMarker = STEPS.find(s => s.markerType === 'nft')!;
+        
+        setStatus('Создание сканера...');
         const scanner = new MindARImage({
-          imageTargetSrc: targets.join(','),
+          imageTargetSrc: firstMarker.nftDescriptor! + '.mind',
+          filterMinCF: 0.1,
+          filterBeta: 0.001,
         });
 
-        scanner.onTargetFound = (index: number) => {
-          const step = STEPS.find((_, i) => i === index);
+        // 4. Добавляем ОСТАЛЬНЫЕ маркеры
+        const remainingMarkers = STEPS
+          .filter(s => s.markerType === 'nft' && s.id !== firstMarker.id)
+          .map(s => s.nftDescriptor! + '.mind');
+
+        if (remainingMarkers.length > 0) {
+          setStatus(`Загрузка ${remainingMarkers.length} маркеров...`);
+          
+          // Загружаем каждый .mind файл и добавляем в сканер
+          for (const markerPath of remainingMarkers) {
+            const response = await fetch(markerPath);
+            const buffer = await response.arrayBuffer();
+            scanner.addImageTargets(new Uint8Array(buffer));
+            console.log('[AR] Добавлен маркер:', markerPath);
+          }
+        }
+
+        // 5. Обработчики
+        scanner.onTargetFound = (targetIndex: number) => {
+          console.log(`[AR] 🎯 Маркер найден! Индекс: ${targetIndex}`);
+          const step = STEPS.filter(s => s.markerType === 'nft')[targetIndex];
           if (step) {
-            console.log('[AR] 🎯 Найден:', step.title);
             handleMarkerFound(step.id);
             setStatus(`✅ ${step.title}`);
           }
@@ -242,18 +150,20 @@ export function ARScene({ onReady, onError }: { onReady?: () => void; onError?: 
           setStatus('🔍 Ищите маркер...');
         };
 
-        // 5. Запуск
+        // 6. Запуск
         setStatus('Запуск камеры...');
         await scanner.start(containerRef.current!);
-        console.log('[AR] ✅ Сканер запущен');
-
+        
+        scannerRef.current = scanner;
+        console.log('[AR] ✅ Сканер запущен!');
+        
         setIsLoading(false);
         setCameraReady(true);
         onReady?.();
-        setStatus('📷 Наведите на маркер');
+        setStatus('📷 Наведите камеру на маркер');
 
       } catch (err: any) {
-        console.error('[AR] Ошибка:', err);
+        console.error('[AR] ❌ Ошибка:', err);
         setError(err.message);
         setCameraError(err.message);
         onError?.(err.message);
@@ -262,101 +172,248 @@ export function ARScene({ onReady, onError }: { onReady?: () => void; onError?: 
     }
 
     init();
+
+    return () => {
+      if (scannerRef.current?.stop) {
+        scannerRef.current.stop();
+      }
+    };
   }, []);
 
   const currentStep = STEPS[completedSteps];
-  const displayStep = currentMarker && showingContent ? STEPS.find(s => s.id === currentMarker) : null;
+  const displayStep = currentMarker && showingContent
+    ? STEPS.find(s => s.id === currentMarker)
+    : null;
 
   return (
     <div ref={containerRef} style={{ position: 'fixed', inset: 0, zIndex: 0, background: '#000' }}>
-      <div style={{
-        position: 'absolute', top: 20, left: '50%', transform: 'translateX(-50%)',
-        background: 'rgba(0,0,0,0.9)', padding: '10px 20px', borderRadius: 25,
-        color: '#4ade80', fontSize: 14, fontWeight: 'bold', zIndex: 60,
-        border: '2px solid #4ade80'
-      }}>
-        📷 {status}
-      </div>
-
-      <div style={{
-        position: 'absolute', bottom: 20, left: '50%', transform: 'translateX(-50%)',
-        background: 'rgba(0,0,0,0.85)', padding: '12px 20px', borderRadius: 25,
-        color: 'white', fontSize: 14, zIndex: 50
-      }}>
-        📍 {completedSteps + 1}/7: {currentStep?.title || 'Финал'}
-      </div>
-
-      {displayStep && (
-        <div style={{
-          position: 'fixed', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
-          background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(8px)', zIndex: 30
-        }}>
-          <div style={{ textAlign: 'center', transform: `scale(${displayStep.scale})` }}>
-            <div style={{
-              width: 80, height: 80, margin: '0 auto', borderRadius: '50%',
-              background: 'radial-gradient(circle, #4ade80, #3b82f6)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center'
-            }}>
-              <span style={{ fontSize: 36 }}>🎯</span>
-            </div>
-            <p style={{ color: 'white', fontSize: 24, fontWeight: 'bold', marginTop: 12 }}>{displayStep.title}</p>
-            {displayStep.clueForNext && <p style={{ color: '#93c5fd', fontSize: 14 }}>{displayStep.clueForNext}</p>}
-          </div>
-        </div>
-      )}
-
-      {isLoading && (
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#000', color: 'white', zIndex: 100 }}>
-          <div style={{ width: 50, height: 50, border: '4px solid rgba(255,255,255,0.2)', borderTop: '4px solid #4ade80', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
-          <p style={{ marginTop: 16 }}>{status}</p>
-        </div>
-      )}
-
-      {error && (
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.95)', color: 'white', zIndex: 100 }}>
-          <p style={{ fontSize: 20, color: '#ef4444' }}>Ошибка</p>
-          <p>{error}</p>
-        </div>
-      )}
-
-      <style>{`@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}`}</style>
+      <StatusBar status={status} />
+      <ProgressBar current={completedSteps} total={STEPS.length} title={currentStep?.title} />
+      {displayStep && <MarkerOverlay step={displayStep} />}
+      {isLoading && <LoadingScreen status={status} />}
+      {error && <ErrorScreen error={error} />}
     </div>
   );
 }
 
-function loadScript(src: string): Promise<void> {
-  return new Promise((res) => {
-    const s = document.createElement('script');
-    s.src = src;
-    s.async = true;
-    s.onload = () => res();
-    s.onerror = () => res();
-    document.head.appendChild(s);
-  });
+// ========================================================
+// КОМПОНЕНТЫ UI (адаптивные)
+// ========================================================
+
+function StatusBar({ status }: { status: string }) {
+  return (
+    <div style={{
+      position: 'absolute', top: 'clamp(8px, 2vh, 15px)', left: '50%',
+      transform: 'translateX(-50%)', background: 'rgba(0,0,0,0.92)',
+      padding: 'clamp(6px, 1.5vh, 10px) clamp(12px, 3vw, 20px)',
+      borderRadius: 'clamp(15px, 4vw, 25px)', color: '#4ade80',
+      fontSize: 'clamp(11px, 2.5vw, 14px)', fontWeight: 'bold', zIndex: 60,
+      border: '2px solid #4ade80', maxWidth: '90%', textAlign: 'center',
+    }}>
+      {status}
+    </div>
+  );
 }
 
-function waitFor(fn: () => boolean, ms: number): Promise<void> {
-  return new Promise((res, rej) => {
+function ProgressBar({ current, total, title }: { current: number; total: number; title?: string }) {
+  const pct = Math.round((current / total) * 100);
+  return (
+    <div style={{
+      position: 'absolute', bottom: 'clamp(10px, 2vh, 20px)', left: '50%',
+      transform: 'translateX(-50%)', background: 'rgba(0,0,0,0.88)',
+      padding: 'clamp(8px, 2vh, 12px) clamp(12px, 3vw, 20px)',
+      borderRadius: 'clamp(15px, 4vw, 25px)', color: 'white',
+      fontSize: 'clamp(11px, 2.5vw, 14px)', zIndex: 50, maxWidth: '95%',
+      textAlign: 'center',
+    }}>
+      <div style={{ fontWeight: 'bold' }}>
+        📍 {current + 1}/{total}: {title || '...'}
+      </div>
+      <div style={{
+        marginTop: 6, height: 4, background: 'rgba(255,255,255,0.2)',
+        borderRadius: 2, overflow: 'hidden',
+      }}>
+        <div style={{
+          height: '100%', width: `${pct}%`,
+          background: 'linear-gradient(90deg, #4ade80, #22c55e)',
+          transition: 'width 0.5s ease',
+        }} />
+      </div>
+    </div>
+  );
+}
+
+function MarkerOverlay({ step }: { step: QuestStep }) {
+  return (
+    <div style={{
+      position: 'fixed', inset: 0, display: 'flex',
+      alignItems: 'center', justifyContent: 'center',
+      background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)',
+      zIndex: 30, padding: 20,
+    }}>
+      <div style={{
+        textAlign: 'center',
+        transform: `scale(${Math.min(step.scale, 0.8)})`,
+        maxWidth: '100%', width: '100%', wordBreak: 'break-word',
+      }}>
+        <div style={{
+          width: 'clamp(50px, 12vw, 80px)', height: 'clamp(50px, 12vw, 80px)',
+          margin: '0 auto', borderRadius: '50%',
+          background: 'radial-gradient(circle, #4ade80, #3b82f6)',
+          boxShadow: '0 0 30px rgba(74,222,128,0.5), 0 0 60px rgba(59,130,246,0.3)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          <span style={{ fontSize: 'clamp(24px, 7vw, 36px)' }}>🎯</span>
+        </div>
+        <p style={{
+          color: 'white', fontSize: 'clamp(16px, 5vw, 24px)',
+          fontWeight: 'bold', marginTop: 12,
+          textShadow: '0 2px 10px rgba(0,0,0,0.5)', padding: '0 10px',
+        }}>
+          {step.title}
+        </p>
+        {step.scrollText && (
+          <div style={{
+            marginTop: 10, background: 'rgba(0,0,0,0.85)',
+            border: '2px solid rgba(250,204,21,0.5)', borderRadius: 10,
+            padding: 'clamp(6px, 1.5vw, 12px)', maxWidth: '100%',
+            marginLeft: 'auto', marginRight: 'auto',
+          }}>
+            <p style={{
+              color: '#fde047', fontSize: 'clamp(11px, 2.5vw, 14px)',
+              margin: 0, lineHeight: 1.4,
+            }}>
+              {step.scrollText}
+            </p>
+          </div>
+        )}
+        {step.clueForNext && (
+          <div style={{
+            marginTop: 8, background: 'rgba(30,58,138,0.9)',
+            border: '1px solid rgba(96,165,250,0.4)', borderRadius: 8,
+            padding: 'clamp(6px, 1.5vw, 10px)', maxWidth: '100%',
+            marginLeft: 'auto', marginRight: 'auto',
+          }}>
+            <p style={{
+              color: '#93c5fd', fontSize: 'clamp(10px, 2.5vw, 13px)',
+              margin: 0,
+            }}>
+              💡 {step.clueForNext}
+            </p>
+          </div>
+        )}
+        {step.id === 'marker_lake' && (
+          <div style={{
+            marginTop: 15, background: 'linear-gradient(90deg, #fbbf24, #f59e0b)',
+            borderRadius: 12, padding: 'clamp(10px, 2.5vw, 16px)',
+            maxWidth: '80%', marginLeft: 'auto', marginRight: 'auto',
+          }}>
+            <p style={{
+              color: 'white', fontSize: 'clamp(20px, 5vw, 28px)',
+              fontWeight: 'bold', margin: 0,
+            }}>
+              🎉 SEVA2024AR
+            </p>
+            <p style={{
+              color: 'white', fontSize: 'clamp(12px, 3vw, 16px)',
+              marginTop: 4,
+            }}>
+              Скидка 25%!
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function LoadingScreen({ status }: { status: string }) {
+  return (
+    <div style={{
+      position: 'absolute', inset: 0, display: 'flex',
+      flexDirection: 'column', alignItems: 'center',
+      justifyContent: 'center', background: '#000',
+      color: 'white', zIndex: 100,
+    }}>
+      <div style={{
+        width: 'clamp(40px, 10vw, 50px)', height: 'clamp(40px, 10vw, 50px)',
+        border: '4px solid rgba(255,255,255,0.2)',
+        borderTop: '4px solid #4ade80', borderRadius: '50%',
+        animation: 'spin 1s linear infinite',
+      }} />
+      <p style={{
+        marginTop: 'clamp(12px, 3vw, 16px)',
+        fontSize: 'clamp(14px, 3vw, 16px)',
+      }}>
+        {status}
+      </p>
+    </div>
+  );
+}
+
+function ErrorScreen({ error }: { error: string }) {
+  return (
+    <div style={{
+      position: 'absolute', inset: 0, display: 'flex',
+      flexDirection: 'column', alignItems: 'center',
+      justifyContent: 'center', background: 'rgba(0,0,0,0.95)',
+      color: 'white', zIndex: 100, padding: 20,
+      textAlign: 'center',
+    }}>
+      <p style={{ fontSize: 'clamp(32px, 10vw, 48px)', marginBottom: 10 }}>⚠️</p>
+      <p style={{
+        fontSize: 'clamp(14px, 4vw, 20px)', color: '#ef4444',
+        marginBottom: 10,
+      }}>
+        Ошибка AR
+      </p>
+      <p style={{
+        fontSize: 'clamp(11px, 3vw, 14px)', opacity: 0.8,
+        maxWidth: '90%', wordBreak: 'break-word',
+      }}>
+        {error}
+      </p>
+    </div>
+  );
+}
+
+// ========================================================
+// УТИЛИТЫ
+// ========================================================
+
+function waitForGlobal(name: string, timeoutMs: number): Promise<void> {
+  return new Promise((resolve, reject) => {
     const start = Date.now();
-    const t = setInterval(() => {
-      if (fn()) { clearInterval(t); res(); }
-      else if (Date.now() - start > ms) { clearInterval(t); rej(new Error('Timeout')); }
+    const check = setInterval(() => {
+      if ((window as any)[name]) {
+        clearInterval(check);
+        resolve();
+      } else if (Date.now() - start > timeoutMs) {
+        clearInterval(check);
+        reject(new Error(`Timeout: ${name}`));
+      }
     }, 100);
   });
 }
 ```
 
-### 3. Билд и пуш
+## Что изменилось:
+
+1. **Динамический импорт ESM** — `import('https://cdn.jsdelivr.net/...')` загружает модуль правильно
+2. **Первый маркер** — передаётся в конструктор
+3. **Остальные 6 маркеров** — загружаются через `fetch()` + `addImageTargets()`
+4. **7 отдельных `.mind` файлов** — каждый для своего объекта парка
+
+## Перед деплоем:
+
+Убери старый `mindar-image-aframe.js` (он больше не нужен):
 
 ```powershell
+Remove-Item "public\js\mindar-image-aframe.js" -ErrorAction SilentlyContinue
+Remove-Item "mindar-meta.json" -ErrorAction SilentlyContinue
+
 npm run build
-git add .
-git commit -m "Use MindAR UMD with global THREE"
-git push
+git add . && git commit -m "Fix: load 7 separate .mind markers via JS API" && git push
 ```
 
-Теперь:
-- MindAR UMD найдёт `window.THREE` (от A-Frame)
-- Создаст `window.MINDAR`
-- Инициализируется с твоими `.mind` файлами
-- **Реальное распознавание без тапов!**
+Теперь `marker-1.mind` = Главные ворота, `marker-2.mind` = Древний дуб и т.д. — каждый маркер соответствует своему реальному объекту в парке! 🎯

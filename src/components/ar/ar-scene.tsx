@@ -1,6 +1,6 @@
 /**
  * =====================================================
- * AR-СЦЕНА - ПРАВИЛЬНАЯ A-FRAME + MINDAR ИНИЦИАЛИЗАЦИЯ
+ * AR-СЦЕНА - MindAR JS API с отдельными маркерами
  * =====================================================
  */
 
@@ -17,11 +17,11 @@ interface ARSceneProps {
 
 export function ARScene({ onReady, onError }: ARSceneProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const sceneRef = useRef<HTMLASceneElement | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [status, setStatus] = useState('Инициализация...');
   const [error, setError] = useState<string | null>(null);
   const initRef = useRef(false);
+  const scannerRef = useRef<any>(null);
 
   const { handleMarkerFound, setCameraReady, setCameraError, currentMarker, showingContent, completedSteps } = useQuest();
 
@@ -33,85 +33,79 @@ export function ARScene({ onReady, onError }: ARSceneProps) {
       try {
         setStatus('Ожидание A-Frame...');
         await waitForGlobal('AFRAME', 15000);
-        console.log('[AR] A-Frame готов');
-        const AFRAME = (window as any).AFRAME;
+        await waitForGlobal('THREE', 5000);
+        console.log('[AR] A-Frame + THREE готовы');
 
         setStatus('Загрузка MindAR...');
-        await loadScript('/js/mindar-image-aframe.js');
-        await new Promise(r => setTimeout(r, 500));
+        const mindarModule = await import(
+          'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js'
+        );
+
+        const MindARImage = mindarModule.MindARImage || mindarModule.default?.MindARImage || mindarModule.default;
+        if (!MindARImage) throw new Error('MindARImage не найден');
+
+        console.log('[AR] MindAR модуль загружен');
+
+        const nftSteps = STEPS.filter(s => s.markerType === 'nft' && s.nftDescriptor);
+        if (nftSteps.length === 0) throw new Error('Нет NFT маркеров');
+
+        const firstMarker = nftSteps[0];
+        setStatus('Создание сканера...');
         
-        const targets = STEPS
-          .filter(s => s.markerType === 'nft' && s.nftDescriptor)
-          .map(s => s.nftDescriptor!.replace('/assets/nft/', ''))
-          .join(',');
-        
-        console.log('[AR] Targets:', targets);
-
-        const container = containerRef.current;
-        if (!container) throw new Error('Container not found');
-
-        const scene = document.createElement('a-scene');
-        scene.setAttribute('embedded');
-        scene.setAttribute('renderer', 'antialias: true, colorManagement: true, physicallyCorrectLights: true');
-        scene.setAttribute('vr-mode-ui', 'enabled: false');
-        scene.setAttribute('device-orientation-permission-ui', 'enabled: false');
-        scene.setAttribute('style', 'width: 100%; height: 100%; position: absolute; top: 0; left: 0;');
-        
-        scene.setAttribute('mindar-image', 'imageTargetSrc: /assets/nft/' + targets + '.mind; filterMinCF: 0.1; filterBeta: 0.001');
-
-        const camera = document.createElement('a-camera');
-        camera.setAttribute('position', '0 0 0');
-        camera.setAttribute('look-controls', 'enabled: false');
-        scene.appendChild(camera);
-
-        scene.addEventListener('arReady', () => {
-          console.log('[AR] AR готов!');
-          setIsLoading(false);
-          setCameraReady(true);
-          onReady?.();
-          setStatus('📷 Наведите камеру на маркер');
+        const scanner = new MindARImage({
+          imageTargetSrc: firstMarker.nftDescriptor + '.mind',
+          filterMinCF: 0.1,
+          filterBeta: 0.001,
         });
 
-        scene.addEventListener('targetFound', (e: any) => {
-          const index = e.detail?.targetIndex;
-          if (index !== undefined) {
-            const step = STEPS[index];
-            if (step) {
-              console.log('[AR] 🎯 Найден:', step.title);
-              handleMarkerFound(step.id);
-              setStatus('✅ ' + step.title);
-            }
+        const remainingMarkers = nftSteps.slice(1);
+        if (remainingMarkers.length > 0) {
+          setStatus('Загрузка ' + remainingMarkers.length + ' маркеров...');
+          for (const step of remainingMarkers) {
+            const response = await fetch(step.nftDescriptor + '.mind');
+            const buffer = await response.arrayBuffer();
+            scanner.addImageTargets(new Uint8Array(buffer));
+            console.log('[AR] Добавлен:', step.nftDescriptor);
           }
-        });
+        }
 
-        scene.addEventListener('targetLost', () => {
+        scanner.onTargetFound = (targetIndex: number) => {
+          console.log('[AR] Маркер найден! Индекс:', targetIndex);
+          const step = nftSteps[targetIndex];
+          if (step) {
+            handleMarkerFound(step.id);
+            setStatus('✅ ' + step.title);
+          }
+        };
+
+        scanner.onTargetLost = () => {
           setStatus('🔍 Ищите маркер...');
-        });
+        };
 
-        scene.addEventListener('error', (e: any) => {
-          const errMsg = e.detail?.message || 'Ошибка AR';
-          console.error('[AR] Ошибка:', errMsg);
-          setError(errMsg);
-          setCameraError(errMsg);
-          onError?.(errMsg);
-        });
+        setStatus('Запуск камеры...');
+        await scanner.start(containerRef.current!);
+        scannerRef.current = scanner;
+        console.log('[AR] Сканер запущен!');
 
-        container.appendChild(scene);
-        sceneRef.current = scene as any;
+        setIsLoading(false);
+        setCameraReady(true);
+        onReady?.();
+        setStatus('📷 Наведите камеру на маркер');
 
       } catch (err: any) {
-        console.error('[AR] ❌ Ошибка:', err);
+        console.error('[AR] Ошибка:', err);
         setError(err.message || 'Ошибка');
         setCameraError(err.message);
         onError?.(err.message);
+        setIsLoading(false);
       }
     }
 
     init();
 
     return () => {
-      if (sceneRef.current) {
-        sceneRef.current.remove();
+      if (scannerRef.current?.stop) {
+        scannerRef.current.stop();
       }
     };
   }, []);
@@ -259,18 +253,6 @@ function ErrorScreen({ error }: { error: string }) {
       <p style={{ fontSize: 'clamp(11px, 3vw, 14px)', opacity: 0.8, maxWidth: '90%', wordBreak: 'break-word' }}>{error}</p>
     </div>
   );
-}
-
-function loadScript(src: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    if (document.querySelector('script[src="' + src + '"]')) { resolve(); return; }
-    const s = document.createElement('script');
-    s.src = src;
-    s.async = true;
-    s.onload = () => resolve();
-    s.onerror = () => reject(new Error('Script load error'));
-    document.head.appendChild(s);
-  });
 }
 
 function waitForGlobal(name: string, timeoutMs: number): Promise<void> {
