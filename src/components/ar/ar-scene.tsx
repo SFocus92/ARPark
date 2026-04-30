@@ -1,6 +1,6 @@
 /**
  * =====================================================
- * AR-СЦЕНА - MINDAR СКАНЕР
+ * AR-СЦЕНА - ПРОСТОЙ СКАНЕР С КАМЕРОЙ
  * =====================================================
  */
 
@@ -16,13 +16,14 @@ interface ARSceneProps {
 }
 
 export function ARScene({ onReady, onError }: ARSceneProps) {
+  const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [loadingMessage, setLoadingMessage] = useState('Инициализация...');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   
   const { 
     handleMarkerFound, 
+    handleMarkerLost,
     setCameraReady, 
     setCameraError,
     currentMarker,
@@ -31,185 +32,89 @@ export function ARScene({ onReady, onError }: ARSceneProps) {
   } = useQuest();
 
   // ---------------------------------------------------
-  // ИНИЦИАЛИЗАЦИЯ
+  // ИНИЦИАЛИЗАЦИЯ КАМЕРЫ
   // ---------------------------------------------------
   
-  const initAR = useCallback(async () => {
+  const initCamera = useCallback(async () => {
     try {
-      console.log('[AR] Начало инициализации...');
+      console.log('[AR] Инициализация камеры...');
       
-      // Проверяем поддержку камеры
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
         throw new Error('Камера не поддерживается браузером');
       }
       
-      // Явно запрашиваем доступ к камере
-      setLoadingMessage('Запрос доступа к камере...');
-      try {
-        await navigator.mediaDevices.getUserMedia({ 
-          video: { facingMode: 'environment' } 
-        });
-        console.log('[AR] Камера доступна');
-      } catch (camErr: any) {
-        if (camErr.name === 'NotAllowedError') {
-          throw new Error('Доступ к камере запрещён. Разрешите в настройках браузера.');
-        }
-        if (camErr.name === 'NotFoundError') {
-          throw new Error('Камера не найдена на устройстве.');
-        }
-        console.warn('[AR] Камера недоступна:', camErr);
-      }
-      
-      setLoadingMessage('Загрузка AR библиотек...');
-      
-      // Проверяем загрузку A-Frame + THREE
-      let attempts = 0;
-      while (attempts < 50) {
-        const aframe = (window as any).AFRAME;
-        const three = (window as any).THREE;
-        const mindar = (window as any).MINDAR;
-        
-        if (aframe && three && mindar) {
-          console.log('[AR] Библиотеки загружены');
-          break;
-        }
-        
-        await new Promise(r => setTimeout(r, 100));
-        attempts++;
-      }
-      
-      const AFRAME = (window as any).AFRAME;
-      const THREE = (window as any).THREE;
-      const MINDAR = (window as any).MINDAR;
-      
-      if (!AFRAME || !THREE || !MINDAR) {
-        console.error('[AR] Не загрузились: A-Frame=', !!AFRAME, 'THREE=', !!THREE, 'MINDAR=', !!MINDAR);
-        throw new Error('AR библиотеки не загрузились. Проверьте интернет-соединение.');
-      }
-      
-      setLoadingMessage('Настройка камеры...');
-      console.log('[AR] Создание MindAR...');
-      
-      // Собираем маркеры
-      const imageTargets: string[] = [];
-      STEPS.forEach(step => {
-        if (step.markerType === 'nft' && step.nftDescriptor) {
-          imageTargets.push(step.nftDescriptor + '.mind');
+      // Запрашиваем доступ к камере
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: 'environment',
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
         }
       });
       
-      console.log('[AR] Маркеры:', imageTargets);
+      console.log('[AR] Камера доступна');
       
-      // Создаём MindAR с правильной конфигурацией
-      const mindar = new MINDAR.Image({
-        imageTargetsSrc: imageTargets.join(','),
-        filterThreshold: 0.7,
-        uiLoading: 'no',
-        uiScanning: 'no', 
-        uiError: 'no',
-        showStats: false,
-        deviceType: 'auto'
-      });
-      
-      console.log('[AR] MindAR создан');
-      
-      // Рендерер
-      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      
-      const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(1, 1, 0.1, 1000);
-      
-      // Свет
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
-      scene.add(ambientLight);
-      
-      // Обработчики событий
-      mindar.onStart = () => {
-        console.log('[AR] MindAR started');
-        
-        const video = document.querySelector('video');
-        if (video) {
-          video.style.width = '100%';
-          video.style.height = '100%';
-          video.style.objectFit = 'cover';
-        }
-        
-        const canvas = renderer.domElement;
-        canvas.style.position = 'absolute';
-        canvas.style.top = '0';
-        canvas.style.left = '0';
-        containerRef.current?.appendChild(canvas);
-        
-        setIsLoading(false);
-        setCameraReady(true);
-        onReady?.();
-        
-        console.log('[AR] Готов к сканированию!');
-        
-        // Запускаем рендеринг
-        const animate = () => {
-          renderer.render(scene, camera);
-          requestAnimationFrame(animate);
-        };
-        animate();
-      };
-      
-      // Обработка маркеров
-      for (let i = 0; i < STEPS.length; i++) {
-        const step = STEPS[i];
-        const anchor = mindar.addAnchor(i);
-        
-        const group = new THREE.Group();
-        group.visible = false;
-        anchor.group.add(group);
-        
-        anchor.onTargetFound = () => {
-          console.log('[AR] Найден маркер:', step.id);
-          group.visible = true;
-          handleMarkerFound(step.id);
-          
-          if (step.soundUrl) {
-            new Audio(step.soundUrl).play().catch(() => {});
-          }
-        };
-        
-        anchor.onTargetLost = () => {
-          group.visible = false;
-        };
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        await videoRef.current.play();
       }
       
-      mindar.onError = (err: any) => {
-        console.error('[AR] MindAR error:', err);
-        setCameraError('Ошибка AR: ' + (err.message || err));
-        onError?.(err.message);
-      };
+      setIsLoading(false);
+      setCameraReady(true);
+      onReady?.();
       
-      // Запуск
-      mindar.start();
+      console.log('[AR] Готов к работе!');
       
     } catch (error: any) {
-      console.error('[AR] Ошибка инициализации:', error);
-      setErrorMessage(error.message || 'Неизвестная ошибка');
-      setCameraError(error.message || 'Ошибка инициализации AR');
-      onError?.(error.message);
+      console.error('[AR] Ошибка камеры:', error);
+      
+      let msg = 'Ошибка камеры';
+      if (error.name === 'NotAllowedError') {
+        msg = 'Доступ к камере запрещён. Разрешите в настройках браузера.';
+      } else if (error.name === 'NotFoundError') {
+        msg = 'Камера не найдена на устройстве.';
+      }
+      
+      setErrorMessage(msg);
+      setCameraError(msg);
+      onError?.(msg);
       setIsLoading(false);
     }
-  }, [handleMarkerFound, setCameraReady, setCameraError, onReady, onError]);
+  }, [setCameraReady, setCameraError, onReady, onError]);
+
+  // ---------------------------------------------------
+  // ОБРАБОТЧИК ТАПА ПО ЭКРАНУ (СИМУЛЯЦИЯ)
+  // ---------------------------------------------------
+  
+  const handleScreenTap = useCallback((e: React.MouseEvent | React.TouchEvent) => {
+    // При тапе имитируем обнаружение маркера
+    // Это позволяет тестировать без реального AR
+    const step = STEPS[completedSteps];
+    if (step) {
+      handleMarkerFound(step.id);
+      
+      // Через 3 секунды скрываем
+      setTimeout(() => {
+        handleMarkerLost();
+      }, 3000);
+    }
+  }, [handleMarkerFound, handleMarkerLost, completedSteps]);
 
   // ---------------------------------------------------
   // МОНТИРОВАНИЕ
   // ---------------------------------------------------
   
   useEffect(() => {
-    // Небольшая задержка чтобы A-Frame загрузился
-    const timer = setTimeout(() => {
-      initAR();
-    }, 1000);
+    initCamera();
     
-    return () => clearTimeout(timer);
-  }, [initAR]);
+    return () => {
+      // Останавливаем камеру при выходе
+      if (videoRef.current?.srcObject) {
+        const tracks = (videoRef.current.srcObject as MediaStream).getTracks();
+        tracks.forEach(track => track.stop());
+      }
+    };
+  }, [initCamera]);
 
   // ---------------------------------------------------
   // РЕНДЕРИНГ
@@ -233,7 +138,24 @@ export function ARScene({ onReady, onError }: ARSceneProps) {
         zIndex: 0,
         backgroundColor: '#000',
       }}
+      onClick={handleScreenTap}
     >
+      {/* Видео с камеры */}
+      <video
+        ref={videoRef}
+        autoPlay
+        playsInline
+        muted
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+        }}
+      />
+
       {/* Статус */}
       {!isLoading && !errorMessage && (
         <div style={{
@@ -250,7 +172,7 @@ export function ARScene({ onReady, onError }: ARSceneProps) {
           fontWeight: 'bold',
           border: '2px solid #22c55e',
         }}>
-          📷 Готов к сканированию
+          📷 Тапните по экрану для теста
         </div>
       )}
 
@@ -277,7 +199,7 @@ export function ARScene({ onReady, onError }: ARSceneProps) {
         <MarkerObject step={displayStep} />
       )}
 
-      {/* Загрузка или ошибка */}
+      {/* Загрузка */}
       {isLoading && (
         <div style={{
           position: 'absolute',
@@ -301,13 +223,14 @@ export function ARScene({ onReady, onError }: ARSceneProps) {
             borderRadius: '50%',
             animation: 'spin 1s linear infinite',
           }} />
-          <p style={{ marginTop: 20, fontSize: 18 }}>{loadingMessage}</p>
+          <p style={{ marginTop: 20, fontSize: 18 }}>Инициализация камеры...</p>
           <p style={{ marginTop: 10, fontSize: 14, opacity: 0.7 }}>
-            Подождите, загружаются AR библиотеки...
+            Разрешите доступ к камере
           </p>
         </div>
       )}
 
+      {/* Ошибка */}
       {errorMessage && (
         <div style={{
           position: 'absolute',
@@ -327,21 +250,6 @@ export function ARScene({ onReady, onError }: ARSceneProps) {
         }}>
           <p style={{ fontSize: 24, color: '#ef4444', marginBottom: 20 }}>⚠️ Ошибка</p>
           <p style={{ fontSize: 16 }}>{errorMessage}</p>
-          <button 
-            onClick={() => window.location.reload()}
-            style={{
-              marginTop: 20,
-              padding: '12px 24px',
-              fontSize: 16,
-              backgroundColor: '#22c55e',
-              border: 'none',
-              borderRadius: 8,
-              color: 'white',
-              cursor: 'pointer',
-            }}
-          >
-            Перезагрузить
-          </button>
         </div>
       )}
 
