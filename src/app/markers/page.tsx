@@ -9,10 +9,10 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { STEPS, PARK_CONFIG } from '@/lib/quest-config';
-import { Printer, Info, Download, Camera, TreePine, Mountain, Bridge, Landmark, Waves, MapPin } from 'lucide-react';
+import { Printer, Info, Download, Camera, TreePine, Mountain, Landmark, Waves, MapPin } from 'lucide-react';
 
 // Иконки для каждого этапа
-const stepIcons = [MapPin, TreePine, MapPin, Mountain, Bridge, Landmark, Waves];
+const stepIcons = [MapPin, TreePine, MapPin, Mountain, Landmark, Landmark, Waves];
 
 export default function MarkersPage() {
   const handlePrint = () => {
