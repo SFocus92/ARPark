@@ -21,21 +21,21 @@ import { ErrorScreen } from '@/components/ar/error-screen';
 import { useQuest } from '@/hooks/use-quest';
 
 // =====================================================
-// ЗАГРУЗКА A-FRAME (ВНЕ КОМПОНЕНТА)
+// ЗАГРУЗКА MINDAR (ВНЕ КОМПОНЕНТА)
 // =====================================================
 
-function loadAFrame(): Promise<void> {
+function loadMindAR(): Promise<void> {
   return new Promise((resolve, reject) => {
-    if ((window as any).AFRAME) {
+    if ((window as any).MINDAR && (window as any).THREE) {
       resolve();
       return;
     }
     
     const script = document.createElement('script');
-    script.src = 'https://aframe.io/releases/1.4.0/aframe.min.js';
+    script.src = 'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js';
     script.async = true;
     script.onload = () => resolve();
-    script.onerror = () => reject(new Error('Failed to load A-Frame'));
+    script.onerror = () => reject(new Error('Failed to load MindAR'));
     document.head.appendChild(script);
   });
 }
@@ -92,9 +92,9 @@ export default function QuestApp() {
       }
     }
     
-    // Загружаем A-Frame перед показом AR
+    // Загружаем MindAR перед показом AR
     try {
-      await loadAFrame();
+      await loadMindAR();
     } catch (e) {
       setCameraError('Не удалось загрузить AR библиотеки');
       return;
