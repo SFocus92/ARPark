@@ -21,36 +21,56 @@ import { ErrorScreen } from '@/components/ar/error-screen';
 import { useQuest } from '@/hooks/use-quest';
 
 // =====================================================
-// ЗАГРУЗКА MINDAR + THREE (ВНЕ КОМПОНЕНТА)
+// ЗАГРУЗКА MINDAR + A-FRAME 1.4.0 (ВНЕ КОМПОНЕНТА)
 // =====================================================
 
 function loadMindAR(): Promise<void> {
   return new Promise((resolve, reject) => {
-    if ((window as any).MINDAR && (window as any).THREE) {
+    // Проверяем уже загружено
+    if ((window as any).AFRAME && (window as any).MINDAR) {
+      console.log('[AR] Уже загружено');
       resolve();
       return;
     }
     
     const loadScript = (src: string) => new Promise<void>((res, rej) => {
       if (document.querySelector(`script[src="${src}"]`)) {
+        console.log('[AR] Уже загружен:', src);
         res();
         return;
       }
+      console.log('[AR] Загрузка:', src);
       const s = document.createElement('script');
       s.src = src;
       s.async = true;
-      s.onload = () => res();
-      s.onerror = () => rej(new Error(`Failed to load ${src}`));
+      s.crossOrigin = 'anonymous';
+      s.onload = () => {
+        console.log('[AR] Загружено:', src);
+        res();
+      };
+      s.onerror = (e) => {
+        console.error('[AR] Ошибка загрузки:', src, e);
+        rej(new Error(`Failed to load ${src}`));
+      };
       document.head.appendChild(s);
     });
     
-    // Загружаем сначала A-Frame (включает THREE), затем MindAR
-    Promise.all([
-      loadScript('https://aframe.io/releases/1.0.4/aframe.min.js'),
-    ])
+    // Загружаем A-Frame 1.4.0 (имеет встроенный THREE.js), затем MindAR
+    loadScript('https://aframe.io/releases/1.4.0/aframe.min.js')
+      .then(() => {
+        console.log('[AR] A-Frame загружен, ожидание THREE...');
+        // Ждём немного чтобы A-Frame инициализировал THREE
+        return new Promise<void>(r => setTimeout(r, 500));
+      })
       .then(() => loadScript('https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js'))
-      .then(() => resolve())
-      .catch(reject);
+      .then(() => {
+        console.log('[AR] MindAR загружен');
+        resolve();
+      })
+      .catch((err) => {
+        console.error('[AR] Ошибка:', err);
+        reject(err);
+      });
   });
 }
 
