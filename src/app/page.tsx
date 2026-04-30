@@ -21,16 +21,15 @@ import { ErrorScreen } from '@/components/ar/error-screen';
 import { useQuest } from '@/hooks/use-quest';
 
 // =====================================================
-// ЗАГРУЗКА MINDAR через динамический import() + A-FRAME
+// ЗАГРУЗКА A-FRAME (MindAR будет загружен локально в ar-scene)
 // =====================================================
 
 async function loadARLibs(): Promise<boolean> {
-  if ((window as any).MINDAR && (window as any).THREE) {
-    console.log('[AR] Уже загружено');
+  // Просто загружаем A-Frame - MindAR загрузится локально в ar-scene.tsx
+  if ((window as any).AFRAME) {
     return true;
   }
   
-  // 1. Загружаем A-Frame
   console.log('[AR] Загрузка A-Frame...');
   await new Promise<void>((resolve) => {
     const s = document.createElement('script');
@@ -44,31 +43,6 @@ async function loadARLibs(): Promise<boolean> {
     s.onerror = () => resolve();
     document.head.appendChild(s);
   });
-  
-  // 2. Ждём THREE
-  console.log('[AR] Ожидание THREE...');
-  await new Promise<void>(resolve => {
-    let count = 0;
-    const check = setInterval(() => {
-      if ((window as any).THREE || ++count > 30) {
-        clearInterval(check);
-        console.log('[AR] THREE готов');
-        resolve();
-      }
-    }, 200);
-  });
-  
-  // 3. Загружаем MindAR через динамический import (ESM)
-  console.log('[AR] Загрузка MindAR (ESM)...');
-  try {
-    const mindarModule = await import(
-      'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js'
-    );
-    (window as any).MINDAR = mindarModule.default || mindarModule;
-    console.log('[AR] MindAR загружен!');
-  } catch (err) {
-    console.log('[AR] MindAR не загружен, используем fallback');
-  }
   
   return true;
 }
@@ -115,27 +89,13 @@ export default function QuestApp() {
   // ---------------------------------------------------
   
   const handleStart = useCallback(() => {
-    // Проверяем HTTPS (кроме localhost и облачных платформ)
-    if (typeof window !== 'undefined') {
-      const protocol = window.location.protocol;
-      const hostname = window.location.hostname;
-      const isHttps = protocol === 'https:';
-      const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1';
-      const isCloud = hostname.includes('.vercel.app') || hostname.includes('.netlify.app');
-      
-      if (!isHttps && !isLocalhost && !isCloud) {
-        setCameraError('Для работы AR требуется HTTPS. Откройте приложение по защищённой ссылке.');
-        return;
-      }
-    }
-    
-    // Запускаем квест (AR загрузится в фоне)
+    // Просто запускаем квест - ar-scene загрузит всё сама
     startQuest();
     setShowAR(true);
     
-    // Пробуем загрузить AR библиотеки (не блокируем)
+    // Загружаем A-Frame в фоне
     loadARLibs().catch(() => {});
-  }, [startQuest, setCameraError]);
+  }, [startQuest]);
   
   // ---------------------------------------------------
   // ОБРАБОТЧИК ГОТОВНОСТИ AR

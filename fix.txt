@@ -1,131 +1,502 @@
-lockdown-install.js:1 SES Removing unpermitted intrinsics
-0a5t4jnoen3t~.js:6 [AR] Загрузка: https://aframe.io/releases/1.4.0/aframe.min.js
-0q9ha8_ln_w9v.js:1 [AR] MindAR недоступен, используем камеру
-0q9ha8_ln_w9v.js:1 [AR] MindAR недоступен, использую камеру
-index.js:95 A-Frame Version: 1.4.0 (Date 2022-12-26, Commit #60a324a2)
-index.js:96 THREE Version (https://github.com/supermedium/three.js): ^0.147.0
-index.js:98 WebVR Polyfill Version: ^0.10.12
-0a5t4jnoen3t~.js:6 [AR] Загружено: https://aframe.io/releases/1.4.0/aframe.min.js
-0a5t4jnoen3t~.js:6 [AR] THREE готов
-0a5t4jnoen3t~.js:6 [AR] Загрузка: https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.umd.prod.js
-0a5t4jnoen3t~.js:6  GET https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.umd.prod.js net::ERR_ABORTED 404 (Not Found)
-(anonymous) @ 0a5t4jnoen3t~.js:6
-t @ 0a5t4jnoen3t~.js:6
-(anonymous) @ 0a5t4jnoen3t~.js:6
-Promise.then
-(anonymous) @ 0a5t4jnoen3t~.js:6
-K @ 0a5t4jnoen3t~.js:6
-(anonymous) @ 0a5t4jnoen3t~.js:6
-h @ 0a5t4jnoen3t~.js:1
-await in h
-sJ @ 0~_1x27hmki5g.js:1
-(anonymous) @ 0~_1x27hmki5g.js:1
-tD @ 0~_1x27hmki5g.js:1
-s4 @ 0~_1x27hmki5g.js:1
-fz @ 0~_1x27hmki5g.js:1
-fT @ 0~_1x27hmki5g.js:1
-(index):1 Refused to execute script from 'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.umd.prod.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled.
-0a5t4jnoen3t~.js:6 [AR] Ошибка: https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.umd.prod.js
-s.onerror @ 0a5t4jnoen3t~.js:6
-script
-(anonymous) @ 0a5t4jnoen3t~.js:6
-t @ 0a5t4jnoen3t~.js:6
-(anonymous) @ 0a5t4jnoen3t~.js:6
-Promise.then
-(anonymous) @ 0a5t4jnoen3t~.js:6
-K @ 0a5t4jnoen3t~.js:6
-(anonymous) @ 0a5t4jnoen3t~.js:6
-h @ 0a5t4jnoen3t~.js:1
-await in h
-sJ @ 0~_1x27hmki5g.js:1
-(anonymous) @ 0~_1x27hmki5g.js:1
-tD @ 0~_1x27hmki5g.js:1
-s4 @ 0~_1x27hmki5g.js:1
-fz @ 0~_1x27hmki5g.js:1
-fT @ 0~_1x27hmki5g.js:1
-0a5t4jnoen3t~.js:6 [AR] MindAR UMD загружен
-0q9ha8_ln_w9v.js:1 [AR] Камера активна  
+Абсолютно правильно! Тап — это только fallback для тестов. Основная логика — **реальное распознавание NFT-маркеров через камеру**. Давай добьём, чтобы MindAR работал без тапов.
 
-Всё ясно! jsDelivr **не отдаёт** UMD-файл (404), а даже если находит — MIME type `text/plain` блокирует выполнение. Нужно срочно менять подход.
+## Текущая проблема
 
-## Проблема:
-- `mindar-image-three.umd.prod.js` — **не существует** на jsDelivr
-- ESM-версия есть, но её нельзя загрузить как обычный скрипт
+MindAR не загружается с CDN (404 на UMD). Нужно:
+1. Скачать MindAR локально
+2. Правильно инициализировать с твоими `.mind` файлами
 
-## Решение: динамический `import()` ESM-модуля
+## Пошаговое решение
 
-Дай мне текущий код загрузчика (`src/lib/mindar-loader.ts` или тот файл, где функция `loadARLibs`), я напишу исправленную версию. Или сразу замени в своём коде:
+### Шаг 1: Скачай MindAR локально
 
-### Если у тебя загрузка через `loadScript`:
+Выполни в терминале **прямо сейчас**:
 
-**Найди в коде:**
-```typescript
-script.src = 'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.umd.prod.js';
+```powershell
+cd D:\ar-quest-sevapark
+
+# Создай папку
+New-Item -ItemType Directory -Force -Path public\js
+
+# Скачай MindAR ESM
+Invoke-WebRequest -Uri "https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js" -OutFile "public\js\mindar-image-three.prod.js"
 ```
 
-**Замени на:**
-```typescript
-script.src = 'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js';
-script.type = 'module';
-```
+Или просто открой в браузере https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js и сохрани как `public/js/mindar-image-three.prod.js`.
 
-### Если используешь функцию `loadARLibs()`:
+### Шаг 2: Замени `ar-scene.tsx` полностью
 
-**Замени свою функцию целиком на эту:**
+Вот продакшн-версия **без тапов, только реальное распознавание**:
 
-```typescript
-export async function loadARLibs(): Promise<{ aframe: boolean; mindar: boolean }> {
-  const result = { aframe: false, mindar: false };
+```tsx
+'use client';
+
+import { useEffect, useRef, useState } from 'react';
+import { useQuest } from '@/hooks/use-quest';
+import { STEPS, QuestStep } from '@/lib/quest-config';
+
+interface ARSceneProps {
+  onReady?: () => void;
+  onError?: (error: string) => void;
+}
+
+export function ARScene({ onReady, onError }: ARSceneProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [status, setStatus] = useState('Инициализация...');
+  const [error, setError] = useState<string | null>(null);
+  const initRef = useRef(false);
+  const scannerRef = useRef<any>(null);
+
+  const {
+    handleMarkerFound,
+    setCameraReady,
+    setCameraError,
+    currentMarker,
+    showingContent,
+    completedSteps,
+  } = useQuest();
+
+  useEffect(() => {
+    if (initRef.current) return;
+    initRef.current = true;
+
+    async function init() {
+      try {
+        // 1. Ждём A-Frame (он грузится в page.tsx)
+        setStatus('Ожидание A-Frame...');
+        await waitForGlobal('AFRAME', 10000);
+        console.log('[AR] A-Frame готов');
+
+        // 2. Ждём THREE.js
+        setStatus('Ожидание THREE.js...');
+        await waitForGlobal('THREE', 5000);
+        console.log('[AR] THREE готов');
+
+        // 3. Загружаем MindAR локально
+        setStatus('Загрузка MindAR...');
+        const mindarModule = await import('/js/mindar-image-three.prod.js');
+        console.log('[AR] MindAR модуль загружен');
+
+        // MindAR экспортирует классы. Ищем MindARImage
+        const MindARImage = 
+          (mindarModule as any).default?.MindARImage ||
+          (mindarModule as any).MindARImage ||
+          mindarModule;
+
+        if (!MindARImage) {
+          throw new Error('MindARImage не найден в модуле');
+        }
+
+        // 4. Готовим список маркеров
+        const targets = STEPS
+          .filter(s => s.markerType === 'nft' && s.nftDescriptor)
+          .map(s => s.nftDescriptor!);
+
+        console.log('[AR] Маркеры для загрузки:', targets);
+
+        // 5. Создаём сканер
+        setStatus('Создание сканера...');
+        const scanner = new MindARImage({
+          imageTargetSrc: targets.join(','),
+          filterMinCF: 0.1,
+          filterBeta: 0.001,
+        });
+
+        // 6. Обработчик обнаружения маркера
+        scanner.onTargetFound = (targetIndex: number) => {
+          console.log(`[AR] 🎯 Маркер найден! Индекс: ${targetIndex}`);
+          
+          // Находим соответствующий шаг
+          const step = STEPS.find((s, i) => i === targetIndex);
+          if (step) {
+            console.log(`[AR] Найден: ${step.title}`);
+            handleMarkerFound(step.id);
+            setStatus(`✅ ${step.title}`);
+          }
+        };
+
+        scanner.onTargetLost = () => {
+          setStatus('🔍 Ищите маркер...');
+        };
+
+        // 7. Запускаем сканер в контейнере
+        setStatus('Запуск камеры...');
+        await scanner.start(containerRef.current!);
+
+        scannerRef.current = scanner;
+        console.log('[AR] ✅ Сканер запущен!');
+
+        setIsLoading(false);
+        setCameraReady(true);
+        onReady?.();
+        setStatus('📷 Наведите камеру на маркер');
+
+      } catch (err: any) {
+        console.error('[AR] ❌ Ошибка инициализации:', err);
+        setError(err.message || 'Неизвестная ошибка');
+        setCameraError(err.message);
+        onError?.(err.message);
+        setIsLoading(false);
+      }
+    }
+
+    init();
+
+    return () => {
+      // Очистка при размонтировании
+      if (scannerRef.current?.stop) {
+        scannerRef.current.stop();
+      }
+    };
+  }, []);
+
+  // Текущий шаг для отображения прогресса
+  const currentStep = STEPS[completedSteps];
+  const displayStep = currentMarker && showingContent
+    ? STEPS.find(s => s.id === currentMarker)
+    : null;
+
+  return (
+    <div
+      ref={containerRef}
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        zIndex: 0,
+        backgroundColor: '#000',
+        overflow: 'hidden',
+      }}
+    >
+      {/* Status Bar */}
+      <StatusBar status={status} />
+
+      {/* Progress */}
+      <ProgressBar 
+        current={completedSteps} 
+        total={STEPS.length} 
+        title={currentStep?.title} 
+      />
+
+      {/* 3D Content when marker found */}
+      {displayStep && <MarkerOverlay step={displayStep} />}
+
+      {/* Loading Screen */}
+      {isLoading && <LoadingScreen status={status} />}
+
+      {/* Error Screen */}
+      {error && <ErrorScreen error={error} />}
+
+      <style jsx global>{`
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+// ========================================================
+// КОМПОНЕНТЫ
+// ========================================================
+
+function StatusBar({ status }: { status: string }) {
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        top: 15,
+        left: '50%',
+        transform: 'translateX(-50%)',
+        background: 'rgba(0,0,0,0.9)',
+        padding: '10px 20px',
+        borderRadius: 25,
+        color: '#4ade80',
+        fontSize: 14,
+        fontWeight: 'bold',
+        zIndex: 60,
+        border: '2px solid #4ade80',
+        whiteSpace: 'nowrap',
+        animation: 'fadeIn 0.3s ease-out',
+      }}
+    >
+      {status}
+    </div>
+  );
+}
+
+function ProgressBar({ current, total, title }: { current: number; total: number; title?: string }) {
+  const pct = Math.round((current / total) * 100);
   
-  if ((window as any).AFRAME && (window as any).MINDAR) {
-    return { aframe: true, mindar: true };
-  }
-  
-  // 1. Загружаем A-Frame
-  await new Promise<void>((resolve) => {
-    const s = document.createElement('script');
-    s.src = 'https://aframe.io/releases/1.4.0/aframe.min.js';
-    s.async = true;
-    s.crossOrigin = 'anonymous';
-    s.onload = () => resolve();
-    s.onerror = () => resolve();
-    document.head.appendChild(s);
-  });
-  
-  result.aframe = !!(window as any).AFRAME;
-  
-  // Ждём THREE
-  await new Promise<void>((resolve) => {
-    let count = 0;
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        bottom: 20,
+        left: '50%',
+        transform: 'translateX(-50%)',
+        background: 'rgba(0,0,0,0.85)',
+        padding: '12px 20px',
+        borderRadius: 25,
+        color: 'white',
+        fontSize: 14,
+        zIndex: 50,
+        animation: 'fadeIn 0.3s ease-out',
+        textAlign: 'center',
+      }}
+    >
+      <div style={{ fontWeight: 'bold' }}>
+        📍 {current + 1}/{total}: {title || '...'}
+      </div>
+      <div
+        style={{
+          marginTop: 6,
+          height: 4,
+          background: 'rgba(255,255,255,0.2)',
+          borderRadius: 2,
+          overflow: 'hidden',
+        }}
+      >
+        <div
+          style={{
+            height: '100%',
+            width: `${pct}%`,
+            background: 'linear-gradient(90deg, #4ade80, #22c55e)',
+            borderRadius: 2,
+            transition: 'width 0.5s ease',
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+
+function MarkerOverlay({ step }: { step: QuestStep }) {
+  return (
+    <div
+      style={{
+        position: 'fixed',
+        inset: 0,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'rgba(0,0,0,0.5)',
+        backdropFilter: 'blur(8px)',
+        zIndex: 30,
+        animation: 'fadeIn 0.5s ease-out',
+      }}
+    >
+      <div
+        style={{
+          transform: `scale(${step.scale})`,
+          textAlign: 'center',
+          maxWidth: '90%',
+        }}
+      >
+        {/* Glowing orb */}
+        <div
+          style={{
+            width: 80,
+            height: 80,
+            margin: '0 auto',
+            background: 'radial-gradient(circle, #4ade80, #3b82f6)',
+            borderRadius: '50%',
+            boxShadow: '0 0 40px rgba(74,222,128,0.5), 0 0 80px rgba(59,130,246,0.3)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <span style={{ fontSize: 36 }}>🎯</span>
+        </div>
+
+        <p
+          style={{
+            color: 'white',
+            fontSize: 24,
+            fontWeight: 'bold',
+            marginTop: 16,
+            textShadow: '0 2px 10px rgba(0,0,0,0.5)',
+          }}
+        >
+          {step.title}
+        </p>
+
+        {step.scrollText && (
+          <div
+            style={{
+              marginTop: 12,
+              background: 'rgba(0,0,0,0.85)',
+              border: '2px solid rgba(250,204,21,0.5)',
+              borderRadius: 12,
+              padding: '12px 16px',
+              maxWidth: 280,
+              margin: '12px auto 0',
+            }}
+          >
+            <p style={{ color: '#fde047', fontSize: 14, margin: 0 }}>
+              {step.scrollText}
+            </p>
+          </div>
+        )}
+
+        {step.clueForNext && (
+          <div
+            style={{
+              marginTop: 8,
+              background: 'rgba(30,58,138,0.9)',
+              border: '1px solid rgba(96,165,250,0.4)',
+              borderRadius: 10,
+              padding: '10px 14px',
+              maxWidth: 280,
+              margin: '8px auto 0',
+            }}
+          >
+            <p style={{ color: '#93c5fd', fontSize: 13, margin: 0 }}>
+              💡 {step.clueForNext}
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function LoadingScreen({ status }: { status: string }) {
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        inset: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: '#000',
+        color: 'white',
+        zIndex: 100,
+      }}
+    >
+      <div
+        style={{
+          width: 50,
+          height: 50,
+          border: '4px solid rgba(255,255,255,0.2)',
+          borderTop: '4px solid #4ade80',
+          borderRadius: '50%',
+          animation: 'spin 1s linear infinite',
+        }}
+      />
+      <p style={{ marginTop: 16, fontSize: 16 }}>{status}</p>
+    </div>
+  );
+}
+
+function ErrorScreen({ error }: { error: string }) {
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        inset: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'rgba(0,0,0,0.95)',
+        color: 'white',
+        zIndex: 100,
+        padding: 20,
+        textAlign: 'center',
+      }}
+    >
+      <p style={{ fontSize: 48, marginBottom: 10 }}>⚠️</p>
+      <p style={{ fontSize: 20, color: '#ef4444', marginBottom: 10 }}>
+        Ошибка AR
+      </p>
+      <p style={{ fontSize: 14, opacity: 0.8, maxWidth: 300 }}>{error}</p>
+    </div>
+  );
+}
+
+// ========================================================
+// УТИЛИТЫ
+// ========================================================
+
+function waitForGlobal(name: string, timeoutMs: number): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const start = Date.now();
     const check = setInterval(() => {
-      if ((window as any).THREE || ++count > 30) {
+      if ((window as any)[name]) {
         clearInterval(check);
         resolve();
+      } else if (Date.now() - start > timeoutMs) {
+        clearInterval(check);
+        reject(new Error(`Timeout waiting for ${name}`));
       }
-    }, 200);
+    }, 100);
   });
-  
-  // 2. Загружаем MindAR через ДИНАМИЧЕСКИЙ ИМПОРТ
-  try {
-    const mindarModule = await import(
-      /* @vite-ignore */
-      'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js'
-    );
-    (window as any).MINDAR = mindarModule.default || mindarModule;
-    result.mindar = true;
-    console.log('[AR] MindAR загружен через динамический импорт');
-  } catch (err) {
-    console.error('[AR] Ошибка загрузки MindAR:', err);
-    result.mindar = false;
-  }
-  
-  return result;
 }
 ```
 
-### Ключевое изменение:
-- Вместо создания `<script>` тега — `import()` (работает как ESM)
-- Модуль сам выполнится и экспортирует API
-- Никаких проблем с MIME type
+### Шаг 3: Удали все тапы из `page.tsx`
 
-Покажи свой текущий файл загрузчика, я дам точную замену!
+Найди `handleStart` в `src/app/page.tsx` и упрости:
+
+```typescript
+const handleStart = useCallback(() => {
+  // Проверка HTTPS
+  if (typeof window !== 'undefined') {
+    const protocol = window.location.protocol;
+    const hostname = window.location.hostname;
+    if (protocol !== 'https:' && hostname !== 'localhost') {
+      setCameraError('Требуется HTTPS');
+      return;
+    }
+  }
+
+  startQuest();
+  setShowAR(true);
+}, [startQuest, setCameraError]);
+```
+
+### Шаг 4: Билд и деплой
+
+```powershell
+npm run build
+git add .
+git commit -m "Real AR scanner with MindAR NFT markers - no taps"
+git push
+```
+
+---
+
+## Как будет работать:
+
+1. Пользователь нажимает "Начать квест"
+2. Загружается A-Frame → THREE.js → MindAR (локально)
+3. MindAR загружает 7 твоих `.mind` файлов из `public/assets/nft/`
+4. Открывается камера
+5. Пользователь наводит на реальный объект парка (который ты фоткал)
+6. MindAR сравнивает картинку с камеры с `.mind` дескрипторами
+7. При совпадении → `onTargetFound` → показывает 3D-объект
+8. **Никаких тапов! Только реальное распознавание!**
+
+После деплоя проверь консоль — должно быть:
+```
+[AR] Маркеры для загрузки: ["/assets/nft/marker-1", "/assets/nft/marker-2", ...]
+[AR] ✅ Сканер запущен!
+```
+
+И при наведении на маркер:
+```
+[AR] 🎯 Маркер найден! Индекс: 0
+[AR] Найден: Главные ворота
+```
