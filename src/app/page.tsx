@@ -21,73 +21,56 @@ import { ErrorScreen } from '@/components/ar/error-screen';
 import { useQuest } from '@/hooks/use-quest';
 
 // =====================================================
-// ЗАГРУЗКА MINDAR UMD + A-FRAME (ВНЕ КОМПОНЕНТА)
+// ЗАГРУЗКА MINDAR через динамический import() + A-FRAME
 // =====================================================
 
 async function loadARLibs(): Promise<boolean> {
-  // Проверяем уже загружено
   if ((window as any).MINDAR && (window as any).THREE) {
-    console.log('[AR] MindAR уже загружен');
+    console.log('[AR] Уже загружено');
     return true;
   }
   
-  return new Promise((resolve) => {
-    const loadScript = (src: string) => new Promise<void>((res) => {
-      if (document.querySelector(`script[src="${src}"]`)) {
-        res();
-        return;
-      }
-      console.log('[AR] Загрузка:', src);
-      const s = document.createElement('script');
-      s.src = src;
-      s.async = true;
-      s.crossOrigin = 'anonymous';
-      s.onload = () => {
-        console.log('[AR] Загружено:', src);
-        res();
-      };
-      s.onerror = () => {
-        console.error('[AR] Ошибка:', src);
-        res(); // Игнорируем ошибки, не блокируем
-      };
-      document.head.appendChild(s);
-    });
-    
-    // 1. Грузим A-Frame
-    loadScript('https://aframe.io/releases/1.4.0/aframe.min.js')
-      .then(() => {
-        // 2. Ждём пока THREE загрузится в A-Frame
-        return new Promise<void>(res => {
-          let attempts = 0;
-          const check = setInterval(() => {
-            if ((window as any).THREE) {
-              clearInterval(check);
-              console.log('[AR] THREE готов');
-              res();
-            }
-            attempts++;
-            if (attempts > 50) {
-              clearInterval(check);
-              res(); // Таймаут
-            }
-          }, 100);
-        });
-      })
-      .then(() => {
-        // 3. Грузим UMD версию MindAR (правильный формат)
-        return loadScript(
-          'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.umd.prod.js'
-        );
-      })
-      .then(() => {
-        console.log('[AR] MindAR UMD загружен');
-        setTimeout(() => resolve(true), 500);
-      })
-      .catch(() => {
-        console.log('[AR] Продолжаем без MindAR');
-        resolve(true); // В любом случае продолжаем
-      });
+  // 1. Загружаем A-Frame
+  console.log('[AR] Загрузка A-Frame...');
+  await new Promise<void>((resolve) => {
+    const s = document.createElement('script');
+    s.src = 'https://aframe.io/releases/1.4.0/aframe.min.js';
+    s.async = true;
+    s.crossOrigin = 'anonymous';
+    s.onload = () => {
+      console.log('[AR] A-Frame загружен');
+      resolve();
+    };
+    s.onerror = () => resolve();
+    document.head.appendChild(s);
   });
+  
+  // 2. Ждём THREE
+  console.log('[AR] Ожидание THREE...');
+  await new Promise<void>(resolve => {
+    let count = 0;
+    const check = setInterval(() => {
+      if ((window as any).THREE || ++count > 30) {
+        clearInterval(check);
+        console.log('[AR] THREE готов');
+        resolve();
+      }
+    }, 200);
+  });
+  
+  // 3. Загружаем MindAR через динамический import (ESM)
+  console.log('[AR] Загрузка MindAR (ESM)...');
+  try {
+    const mindarModule = await import(
+      'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js'
+    );
+    (window as any).MINDAR = mindarModule.default || mindarModule;
+    console.log('[AR] MindAR загружен!');
+  } catch (err) {
+    console.log('[AR] MindAR не загружен, используем fallback');
+  }
+  
+  return true;
 }
 
 // =====================================================

@@ -35,7 +35,7 @@ export function ARScene({ onReady, onError }: ARSceneProps) {
   } = useQuest();
 
   // ---------------------------------------------------
-  // ИНИЦИАЛИЗАЦИЯ MINDAR NFT
+  // ИНИЦИАЛИЗАЦИЯ MINDAR NFT (через динамический import)
   // ---------------------------------------------------
   
   useEffect(() => {
@@ -68,20 +68,19 @@ export function ARScene({ onReady, onError }: ARSceneProps) {
           throw new Error('THREE.js не загружен');
         }
         
-        // Загружаем MindAR
+        // Загружаем MindAR через динамический import
         setStatus('Загрузка MindAR...');
         
-        // Пробуем загрузить MindAR UMD
         if (!(window as any).MINDAR) {
-          await new Promise<void>((resolve) => {
-            const script = document.createElement('script');
-            script.src = 'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.umd.prod.js';
-            script.async = true;
-            script.crossOrigin = 'anonymous';
-            script.onload = () => resolve();
-            script.onerror = () => resolve(); // Не блокируем
-            document.head.appendChild(script);
-          });
+          try {
+            const mindarModule = await import(
+              'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js'
+            );
+            (window as any).MINDAR = mindarModule.default || mindarModule;
+            console.log('[AR] MindAR загружен!');
+          } catch (e) {
+            console.log('[AR] MindAR import failed, trying fallback...');
+          }
         }
         
         await new Promise(r => setTimeout(r, 500));

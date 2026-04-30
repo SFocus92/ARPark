@@ -44,4 +44,88 @@ s4 @ 0~_1x27hmki5g.js:1
 fz @ 0~_1x27hmki5g.js:1
 fT @ 0~_1x27hmki5g.js:1
 0a5t4jnoen3t~.js:6 [AR] MindAR UMD загружен
-0q9ha8_ln_w9v.js:1 [AR] Камера активна
+0q9ha8_ln_w9v.js:1 [AR] Камера активна  
+
+Всё ясно! jsDelivr **не отдаёт** UMD-файл (404), а даже если находит — MIME type `text/plain` блокирует выполнение. Нужно срочно менять подход.
+
+## Проблема:
+- `mindar-image-three.umd.prod.js` — **не существует** на jsDelivr
+- ESM-версия есть, но её нельзя загрузить как обычный скрипт
+
+## Решение: динамический `import()` ESM-модуля
+
+Дай мне текущий код загрузчика (`src/lib/mindar-loader.ts` или тот файл, где функция `loadARLibs`), я напишу исправленную версию. Или сразу замени в своём коде:
+
+### Если у тебя загрузка через `loadScript`:
+
+**Найди в коде:**
+```typescript
+script.src = 'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.umd.prod.js';
+```
+
+**Замени на:**
+```typescript
+script.src = 'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js';
+script.type = 'module';
+```
+
+### Если используешь функцию `loadARLibs()`:
+
+**Замени свою функцию целиком на эту:**
+
+```typescript
+export async function loadARLibs(): Promise<{ aframe: boolean; mindar: boolean }> {
+  const result = { aframe: false, mindar: false };
+  
+  if ((window as any).AFRAME && (window as any).MINDAR) {
+    return { aframe: true, mindar: true };
+  }
+  
+  // 1. Загружаем A-Frame
+  await new Promise<void>((resolve) => {
+    const s = document.createElement('script');
+    s.src = 'https://aframe.io/releases/1.4.0/aframe.min.js';
+    s.async = true;
+    s.crossOrigin = 'anonymous';
+    s.onload = () => resolve();
+    s.onerror = () => resolve();
+    document.head.appendChild(s);
+  });
+  
+  result.aframe = !!(window as any).AFRAME;
+  
+  // Ждём THREE
+  await new Promise<void>((resolve) => {
+    let count = 0;
+    const check = setInterval(() => {
+      if ((window as any).THREE || ++count > 30) {
+        clearInterval(check);
+        resolve();
+      }
+    }, 200);
+  });
+  
+  // 2. Загружаем MindAR через ДИНАМИЧЕСКИЙ ИМПОРТ
+  try {
+    const mindarModule = await import(
+      /* @vite-ignore */
+      'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js'
+    );
+    (window as any).MINDAR = mindarModule.default || mindarModule;
+    result.mindar = true;
+    console.log('[AR] MindAR загружен через динамический импорт');
+  } catch (err) {
+    console.error('[AR] Ошибка загрузки MindAR:', err);
+    result.mindar = false;
+  }
+  
+  return result;
+}
+```
+
+### Ключевое изменение:
+- Вместо создания `<script>` тега — `import()` (работает как ESM)
+- Модуль сам выполнится и экспортирует API
+- Никаких проблем с MIME type
+
+Покажи свой текущий файл загрузчика, я дам точную замену!
