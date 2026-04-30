@@ -13,7 +13,7 @@
 
 'use client';
 
-import { useState, useEffect, useCallback, Suspense } from 'react';
+import { useState, useCallback, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { StartPage } from '@/components/ar/start-page';
 import { QuestUI } from '@/components/ar/quest-ui';
@@ -40,28 +40,7 @@ const ARScene = dynamic(
   }
 );
 
-// =====================================================
-// ФУНКЦИЯ ЗАГРУЗКИ СКРИПТА (ВНЕ КОМПОНЕНТА)
-// =====================================================
 
-function loadScript(src: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    // Проверяем, не загружен ли уже скрипт
-    if (document.querySelector(`script[src="${src}"]`)) {
-      resolve();
-      return;
-    }
-    
-    const script = document.createElement('script');
-    script.src = src;
-    script.async = true;
-    
-    script.onload = () => resolve();
-    script.onerror = () => reject(new Error(`Failed to load ${src}`));
-    
-    document.head.appendChild(script);
-  });
-}
 
 // =====================================================
 // ГЛАВНЫЙ КОМПОНЕНТ
@@ -77,38 +56,7 @@ export default function QuestApp() {
     setCameraReady 
   } = useQuest();
   
-  const [arLoaded, setArLoaded] = useState(false);
   const [showAR, setShowAR] = useState(false);
-  
-  // ---------------------------------------------------
-  // ЗАГРУЗКА A-FRAME СКРИПТОВ
-  // ---------------------------------------------------
-  
-  useEffect(() => {
-    // Загружаем A-Frame и AR.js скрипты
-    const loadAFrame = async () => {
-      // Проверяем, загружен ли уже A-Frame
-      if ((window as any).AFRAME) {
-        setArLoaded(true);
-        return;
-      }
-      
-      try {
-        // Загружаем A-Frame
-        await loadScript('https://aframe.io/releases/1.4.0/aframe.min.js');
-        
-        // Загружаем AR.js
-        await loadScript('https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js');
-        
-        setArLoaded(true);
-      } catch (error) {
-        console.error('Failed to load A-Frame:', error);
-        setCameraError('Не удалось загрузить AR-библиотеки. Проверьте интернет-соединение.');
-      }
-    };
-    
-    loadAFrame();
-  }, [setCameraError]);
   
   // ---------------------------------------------------
   // ОБРАБОТЧИК НАЧАЛА КВЕСТА
@@ -187,21 +135,19 @@ export default function QuestApp() {
   return (
     <div className="relative min-h-screen bg-black">
       {/* AR-сцена */}
-      {arLoaded && (
-        <Suspense fallback={
-          <div className="fixed inset-0 flex items-center justify-center bg-black">
-            <div className="text-center text-white">
-              <div className="w-12 h-12 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4"></div>
-              <p>Загрузка AR...</p>
-            </div>
+      <Suspense fallback={
+        <div className="fixed inset-0 flex items-center justify-center bg-black">
+          <div className="text-center text-white">
+            <div className="w-12 h-12 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4"></div>
+            <p>Загрузка AR...</p>
           </div>
-        }>
-          <ARScene 
-            onReady={handleARReady}
-            onError={handleARError}
-          />
-        </Suspense>
-      )}
+        </div>
+      }>
+        <ARScene 
+          onReady={handleARReady}
+          onError={handleARError}
+        />
+      </Suspense>
       
       {/* UI Overlay */}
       <QuestUI />

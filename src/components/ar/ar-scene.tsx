@@ -58,12 +58,17 @@ export function ARScene({ onReady, onError }: ARSceneProps) {
     try {
       setLoadingMessage('Запрос доступа к камере...');
       
-      // Проверяем HTTPS (кроме localhost)
+      // Проверяем HTTPS (кроме localhost и облачных платформ)
       if (typeof window !== 'undefined') {
         const protocol = window.location.protocol;
         const hostname = window.location.hostname;
         
-        if (protocol !== 'https:' && hostname !== 'localhost' && hostname !== '127.0.0.1') {
+        // Vercel и Netlify автоматически предоставляют HTTPS
+        const isCloudPlatform = hostname.includes('.vercel.app') || 
+                                hostname.includes('.netlify.app') ||
+                                hostname.includes('.cloudflareapps.com');
+        
+        if (protocol !== 'https:' && hostname !== 'localhost' && hostname !== '127.0.0.1' && !isCloudPlatform) {
           throw new Error('HTTPS_REQUIRED');
         }
       }
