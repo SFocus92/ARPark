@@ -37,13 +37,14 @@ export function ARScene({ onReady, onError }: ARSceneProps) {
         console.log('[AR] A-Frame + THREE готовы');
 
         setStatus('Загрузка MindAR...');
-        
+
         // Загружаем MindAR через глобальный скрипт
         await loadMindARScript();
 
-        const { MindARThree } = (window as any);
-        if (!MindARThree) {
-          throw new Error('MindAR не загружен');
+        const MINDAR = (window as any).MINDAR;
+        if (!MINDAR || !MINDAR.IMAGE || !MINDAR.IMAGE.MindARThree) {
+          console.error('[AR] window.MINDAR:', (window as any).MINDAR);
+          throw new Error('MindAR не загружен корректно');
         }
 
         console.log('[AR] MindAR загружен');
@@ -57,7 +58,7 @@ export function ARScene({ onReady, onError }: ARSceneProps) {
         console.log('[AR] Первый маркер:', firstMarker.nftDescriptor + '.mind');
 
         // Правильный API MindAR
-        const mindarThree = new MindARThree.MindARThree({
+        const mindarThree = new MINDAR.IMAGE.MindARThree({
           container: containerRef.current!,
           imageTargetSrc: firstMarker.nftDescriptor + '.mind',
         });
@@ -283,13 +284,18 @@ function waitForGlobal(name: string, timeoutMs: number): Promise<void> {
 }
 
 async function loadMindARScript(): Promise<void> {
-  if ((window as any).MindARThree) return;
+  if ((window as any).MINDAR) return;
 
   return new Promise((resolve, reject) => {
     const script = document.createElement('script');
+    // Используем правильный CDN URL для UMD версии
     script.src = 'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js';
-    script.async = true;
-    script.onload = () => resolve();
+    script.type = 'text/javascript'; // Явно указываем тип
+    script.async = false; // Синхронная загрузка
+    script.onload = () => {
+      console.log('[AR] MindAR скрипт загружен, window.MINDAR:', !!(window as any).MINDAR);
+      resolve();
+    };
     script.onerror = () => reject(new Error('Не удалось загрузить MindAR'));
     document.head.appendChild(script);
   });

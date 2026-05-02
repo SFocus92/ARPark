@@ -13,7 +13,11 @@
       "Bash(git push *)",
       "Bash(npm uninstall *)",
       "Bash(grep -E \"\\\\.\\(ts|tsx\\)$\")",
-      "Bash(npm list *)"
+      "Bash(npm list *)",
+      "WebSearch",
+      "WebFetch(domain:hiukim.github.io)",
+      "WebFetch(domain:github.com)",
+      "Bash(pkill -f \"next dev\")"
     ]
   }
 }
