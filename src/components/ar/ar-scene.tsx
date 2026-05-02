@@ -1,6 +1,6 @@
 /**
  * =====================================================
- * AR-СЦЕНА - MindAR JS API с отдельными маркерами
+ * AR-СЦЕНА - MindAR A-Frame Integration
  * =====================================================
  */
 
@@ -21,7 +21,6 @@ export function ARScene({ onReady, onError }: ARSceneProps) {
   const [status, setStatus] = useState('Инициализация...');
   const [error, setError] = useState<string | null>(null);
   const initRef = useRef(false);
-  const scannerRef = useRef<any>(null);
 
   const { handleMarkerFound, setCameraReady, setCameraError, currentMarker, showingContent, completedSteps } = useQuest();
 
@@ -31,88 +30,87 @@ export function ARScene({ onReady, onError }: ARSceneProps) {
 
     async function init() {
       try {
-        setStatus('Ожидание A-Frame...');
+        setStatus('Загрузка A-Frame...');
         await waitForGlobal('AFRAME', 15000);
-        await waitForGlobal('THREE', 5000);
-        console.log('[AR] A-Frame + THREE готовы');
+        console.log('[AR] A-Frame готов');
 
         setStatus('Загрузка MindAR...');
-
-        // Загружаем MindAR через глобальный скрипт
         await loadMindARScript();
-
-        const MINDAR = (window as any).MINDAR;
-        if (!MINDAR || !MINDAR.IMAGE || !MINDAR.IMAGE.MindARThree) {
-          console.error('[AR] window.MINDAR:', (window as any).MINDAR);
-          throw new Error('MindAR не загружен корректно');
-        }
-
         console.log('[AR] MindAR загружен');
 
         const nftSteps = STEPS.filter(s => s.markerType === 'nft' && s.nftDescriptor);
         if (nftSteps.length === 0) throw new Error('Нет NFT маркеров');
 
-        const firstMarker = nftSteps[0];
-        setStatus('Создание сканера...');
+        setStatus('Создание AR сцены...');
 
-        console.log('[AR] Первый маркер:', firstMarker.nftDescriptor + '.mind');
+        // Создаём A-Frame сцену
+        const scene = document.createElement('a-scene');
+        scene.setAttribute('mindar-image', `imageTargetSrc: ${nftSteps[0].nftDescriptor}.mind; autoStart: false;`);
+        scene.setAttribute('color-space', 'sRGB');
+        scene.setAttribute('renderer', 'colorManagement: true, physicallyCorrectLights');
+        scene.setAttribute('vr-mode-ui', 'enabled: false');
+        scene.setAttribute('device-orientation-permission-ui', 'enabled: false');
 
-        // Правильный API MindAR
-        const mindarThree = new MINDAR.IMAGE.MindARThree({
-          container: containerRef.current!,
-          imageTargetSrc: firstMarker.nftDescriptor + '.mind',
+        // Камера
+        const camera = document.createElement('a-camera');
+        camera.setAttribute('position', '0 0 0');
+        camera.setAttribute('look-controls', 'enabled: false');
+        scene.appendChild(camera);
+
+        // Добавляем якоря для каждого маркера
+        nftSteps.forEach((step, index) => {
+          const anchor = document.createElement('a-entity');
+          anchor.setAttribute('mindar-image-target', `targetIndex: ${index}`);
+
+          // Простой плейсхолдер (можно заменить на 3D модели)
+          const box = document.createElement('a-box');
+          box.setAttribute('position', '0 0 0');
+          box.setAttribute('scale', '0.5 0.5 0.5');
+          box.setAttribute('color', '#4ade80');
+          box.setAttribute('opacity', '0.8');
+          anchor.appendChild(box);
+
+          // Обработчики событий
+          anchor.addEventListener('targetFound', () => {
+            console.log('[AR] Маркер найден:', step.id);
+            handleMarkerFound(step.id);
+            setStatus('✅ ' + step.title);
+          });
+
+          anchor.addEventListener('targetLost', () => {
+            console.log('[AR] Маркер потерян');
+            setStatus('🔍 Ищите маркер...');
+          });
+
+          scene.appendChild(anchor);
         });
 
-        const { renderer, scene, camera } = mindarThree;
-        console.log('[AR] Сканер создан');
+        containerRef.current!.appendChild(scene);
 
-        // Добавляем обработчики для первого маркера
-        const anchor = mindarThree.addAnchor(0);
-        anchor.onTargetFound = () => {
-          console.log('[AR] Маркер найден! Индекс: 0');
-          handleMarkerFound(firstMarker.id);
-          setStatus('✅ ' + firstMarker.title);
-        };
-        anchor.onTargetLost = () => {
-          setStatus('🔍 Ищите маркер...');
-        };
+        // Ждём инициализации сцены
+        scene.addEventListener('loaded', () => {
+          console.log('[AR] Сцена загружена');
+          setStatus('Запуск камеры...');
 
-        // Загружаем остальные маркеры
-        const remainingMarkers = nftSteps.slice(1);
-        if (remainingMarkers.length > 0) {
-          setStatus('Загрузка ' + remainingMarkers.length + ' маркеров...');
-          for (let i = 0; i < remainingMarkers.length; i++) {
-            const step = remainingMarkers[i];
-            const targetIndex = i + 1;
-
-            // Добавляем якорь для каждого маркера
-            const anchor = mindarThree.addAnchor(targetIndex);
-            anchor.onTargetFound = () => {
-              console.log('[AR] Маркер найден! Индекс:', targetIndex);
-              handleMarkerFound(step.id);
-              setStatus('✅ ' + step.title);
-            };
-            anchor.onTargetLost = () => {
-              setStatus('🔍 Ищите маркер...');
-            };
-
-            console.log('[AR] Добавлен якорь:', step.nftDescriptor);
+          // Запускаем AR
+          const sceneEl = scene as any;
+          if (sceneEl.systems['mindar-image-system']) {
+            sceneEl.systems['mindar-image-system'].start().then(() => {
+              console.log('[AR] AR запущен');
+              setIsLoading(false);
+              setCameraReady(true);
+              onReady?.();
+              setStatus('📷 Наведите камеру на маркер');
+            }).catch((err: any) => {
+              console.error('[AR] Ошибка запуска:', err);
+              throw err;
+            });
           }
-        }
-
-        setStatus('Запуск камеры...');
-        await mindarThree.start();
-        scannerRef.current = mindarThree;
-        console.log('[AR] Сканер запущен!');
-
-        setIsLoading(false);
-        setCameraReady(true);
-        onReady?.();
-        setStatus('📷 Наведите камеру на маркер');
+        });
 
       } catch (err: any) {
         console.error('[AR] Ошибка:', err);
-        setError(err.message || 'Ошибка');
+        setError(err.message || 'Ошибка инициализации AR');
         setCameraError(err.message);
         onError?.(err.message);
         setIsLoading(false);
@@ -122,8 +120,14 @@ export function ARScene({ onReady, onError }: ARSceneProps) {
     init();
 
     return () => {
-      if (scannerRef.current?.stop) {
-        scannerRef.current.stop();
+      // Очистка
+      const scene = containerRef.current?.querySelector('a-scene');
+      if (scene) {
+        const sceneEl = scene as any;
+        if (sceneEl.systems['mindar-image-system']) {
+          sceneEl.systems['mindar-image-system'].stop();
+        }
+        scene.remove();
       }
     };
   }, []);
@@ -288,12 +292,12 @@ async function loadMindARScript(): Promise<void> {
 
   return new Promise((resolve, reject) => {
     const script = document.createElement('script');
-    // Используем правильный CDN URL для UMD версии
-    script.src = 'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js';
-    script.type = 'text/javascript'; // Явно указываем тип
-    script.async = false; // Синхронная загрузка
+    // A-Frame версия MindAR
+    script.src = 'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js';
+    script.type = 'text/javascript';
+    script.async = false;
     script.onload = () => {
-      console.log('[AR] MindAR скрипт загружен, window.MINDAR:', !!(window as any).MINDAR);
+      console.log('[AR] MindAR-AFrame загружен');
       resolve();
     };
     script.onerror = () => reject(new Error('Не удалось загрузить MindAR'));

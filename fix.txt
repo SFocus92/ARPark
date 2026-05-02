@@ -1,12 +1,14 @@
 lockdown-install.js:1 SES Removing unpermitted intrinsics
-/favicon.ico:1  Failed to load resource: the server responded with a status of 404 ()
-03nbqfyx1o0o9.js:22 [AR] Загрузка A-Frame...
+0anrkw0vo2i25.js:22 [AR] Загрузка A-Frame...
 index.js:95 A-Frame Version: 1.4.0 (Date 2022-12-26, Commit #60a324a2)
 index.js:96 THREE Version (https://github.com/supermedium/three.js): ^0.147.0
 index.js:98 WebVR Polyfill Version: ^0.10.12
-03nbqfyx1o0o9.js:22 [AR] A-Frame загружен
-0wxsz9lvskd.~.js:1 [AR] A-Frame + THREE готовы
+0anrkw0vo2i25.js:22 [AR] A-Frame загружен
+0j48ftm00qm8a.js:1 [AR] A-Frame + THREE готовы
 mindar-image-three.prod.js:1 Uncaught SyntaxError: Cannot use import statement outside a module
-0wxsz9lvskd.~.js:1 [AR] Ошибка: Error: MindAR не загружен
-    at t (0wxsz9lvskd.~.js:1:813)
-t @ 0wxsz9lvskd.~.js:1
+0j48ftm00qm8a.js:1 [AR] MindAR скрипт загружен, window.MINDAR: false
+0j48ftm00qm8a.js:1 [AR] window.MINDAR: undefined
+t @ 0j48ftm00qm8a.js:1
+0j48ftm00qm8a.js:1 [AR] Ошибка: Error: MindAR не загружен корректно
+    at t (0j48ftm00qm8a.js:1:890)
+t @ 0j48ftm00qm8a.js:1
