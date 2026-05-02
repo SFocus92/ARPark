@@ -38,66 +38,70 @@ export function ARScene({ onReady, onError }: ARSceneProps) {
 
         setStatus('Загрузка MindAR...');
         
-        // Загружаем ESM модуль
-        const mindarModule = await import(
-          'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js'
-        );
+        // Загружаем MindAR через глобальный скрипт
+        await loadMindARScript();
 
-        console.log('[AR] MindAR модуль:', mindarModule);
-        
-        // Ищем конструктор - MindAR экспортирует как default
-        const MindARImage = mindarModule.default;
-        if (!MindARImage || typeof MindARImage !== 'function') {
-          console.error('[AR] MindAR exports:', mindarModule);
-          throw new Error('MindARImage не найден в модуле');
+        const { MindARThree } = (window as any);
+        if (!MindARThree) {
+          throw new Error('MindAR не загружен');
         }
 
-        console.log('[AR] MindARImage найден:', typeof MindARImage);
+        console.log('[AR] MindAR загружен');
 
         const nftSteps = STEPS.filter(s => s.markerType === 'nft' && s.nftDescriptor);
         if (nftSteps.length === 0) throw new Error('Нет NFT маркеров');
 
         const firstMarker = nftSteps[0];
         setStatus('Создание сканера...');
-        
+
         console.log('[AR] Первый маркер:', firstMarker.nftDescriptor + '.mind');
-        
-        const scanner = new MindARImage({
+
+        // Правильный API MindAR
+        const mindarThree = new MindARThree.MindARThree({
+          container: containerRef.current!,
           imageTargetSrc: firstMarker.nftDescriptor + '.mind',
-          filterMinCF: 0.1,
-          filterBeta: 0.001,
-          uiScanning: '#scanning',
         });
 
-        console.log('[AR] Сканер создан:', scanner);
+        const { renderer, scene, camera } = mindarThree;
+        console.log('[AR] Сканер создан');
 
-        const remainingMarkers = nftSteps.slice(1);
-        if (remainingMarkers.length > 0) {
-          setStatus('Загрузка ' + remainingMarkers.length + ' маркеров...');
-          for (const step of remainingMarkers) {
-            const response = await fetch(step.nftDescriptor + '.mind');
-            const buffer = await response.arrayBuffer();
-            scanner.addImageTargets(new Uint8Array(buffer));
-            console.log('[AR] Добавлен:', step.nftDescriptor);
-          }
-        }
-
-        scanner.onTargetFound = (targetIndex: number) => {
-          console.log('[AR] Маркер найден! Индекс:', targetIndex);
-          const step = nftSteps[targetIndex];
-          if (step) {
-            handleMarkerFound(step.id);
-            setStatus('✅ ' + step.title);
-          }
+        // Добавляем обработчики для первого маркера
+        const anchor = mindarThree.addAnchor(0);
+        anchor.onTargetFound = () => {
+          console.log('[AR] Маркер найден! Индекс: 0');
+          handleMarkerFound(firstMarker.id);
+          setStatus('✅ ' + firstMarker.title);
         };
-
-        scanner.onTargetLost = () => {
+        anchor.onTargetLost = () => {
           setStatus('🔍 Ищите маркер...');
         };
 
+        // Загружаем остальные маркеры
+        const remainingMarkers = nftSteps.slice(1);
+        if (remainingMarkers.length > 0) {
+          setStatus('Загрузка ' + remainingMarkers.length + ' маркеров...');
+          for (let i = 0; i < remainingMarkers.length; i++) {
+            const step = remainingMarkers[i];
+            const targetIndex = i + 1;
+
+            // Добавляем якорь для каждого маркера
+            const anchor = mindarThree.addAnchor(targetIndex);
+            anchor.onTargetFound = () => {
+              console.log('[AR] Маркер найден! Индекс:', targetIndex);
+              handleMarkerFound(step.id);
+              setStatus('✅ ' + step.title);
+            };
+            anchor.onTargetLost = () => {
+              setStatus('🔍 Ищите маркер...');
+            };
+
+            console.log('[AR] Добавлен якорь:', step.nftDescriptor);
+          }
+        }
+
         setStatus('Запуск камеры...');
-        await scanner.start(containerRef.current!);
-        scannerRef.current = scanner;
+        await mindarThree.start();
+        scannerRef.current = mindarThree;
         console.log('[AR] Сканер запущен!');
 
         setIsLoading(false);
@@ -275,6 +279,19 @@ function waitForGlobal(name: string, timeoutMs: number): Promise<void> {
       if ((window as any)[name]) { clearInterval(check); resolve(); }
       else if (Date.now() - start > timeoutMs) { clearInterval(check); reject(new Error('Timeout: ' + name)); }
     }, 100);
+  });
+}
+
+async function loadMindARScript(): Promise<void> {
+  if ((window as any).MindARThree) return;
+
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js';
+    script.async = true;
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error('Не удалось загрузить MindAR'));
+    document.head.appendChild(script);
   });
 }
 

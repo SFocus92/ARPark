@@ -10,9 +10,9 @@ AR-Quest "СеваПарк" is a WebAR-based interactive quest application for a
 - Next.js 16 (React framework with App Router)
 - TypeScript
 - Zustand (state management with persistence)
-- Tailwind CSS + shadcn/ui components
-- A-Frame + AR.js (WebAR - pattern markers)
-- Planned: MindAR.js (NFT markers for real object recognition)
+- Tailwind CSS + minimal shadcn/ui components (button, card, progress)
+- A-Frame (WebAR framework)
+- MindAR.js (NFT image tracking for real object recognition)
 
 **Language:** All user-facing content, comments, and documentation are in Russian.
 
@@ -22,7 +22,7 @@ AR-Quest "СеваПарк" is a WebAR-based interactive quest application for a
 # Install dependencies
 npm install
 
-# Development server (runs on port 3000, logs to dev.log)
+# Development server (runs on port 3000)
 npm run dev
 
 # Build for production
@@ -33,19 +33,13 @@ npm run start
 
 # Lint code
 npm run lint
-
-# Database commands (Prisma is installed but not actively used)
-npm run db:push
-npm run db:generate
-npm run db:migrate
-npm run db:reset
 ```
 
 ## Architecture
 
 ### State Management Pattern
 
-The app uses Zustand with persistence for quest state management. The single source of truth is `src/hooks/use-quest.ts`:
+The app uses Zustand with localStorage persistence for quest state management. The single source of truth is `src/hooks/use-quest.ts`:
 
 - **Quest state:** `isStarted`, `completedSteps`, `foundMarkers`, `isComplete`
 - **AR state:** `currentMarker`, `showingContent`, `cameraReady`, `cameraError`
@@ -64,7 +58,8 @@ All quest content is centralized in `src/lib/quest-config.ts`:
 - **AR_CONFIG:** AR detection and UI settings
 
 Each quest step defines:
-- Marker type (`pattern` for AR.js markers like Hiro/Kanji, or `nft` for real object recognition)
+- Marker type (`nft` for MindAR image tracking)
+- NFT descriptor path (e.g., `/assets/nft/marker-1` → loads `marker-1.mind`)
 - Content (title, description, location, hint, clue for next step)
 - 3D object type and appearance (scroll, key, gem, portal, compass, chest)
 - Sound effects and animations
@@ -76,20 +71,20 @@ Each quest step defines:
 **Page Flow:**
 1. `src/app/page.tsx` - Main orchestrator, handles quest lifecycle
 2. `src/components/ar/start-page.tsx` - Welcome screen before quest starts
-3. `src/components/ar/ar-scene.tsx` - AR camera and marker detection
+3. `src/components/ar/ar-scene.tsx` - AR camera and MindAR marker detection
 4. `src/components/ar/quest-ui.tsx` - Overlay UI (progress, messages, controls)
 5. `src/components/ar/error-screen.tsx` - Error handling for camera/HTTPS issues
 
 **AR Implementation:**
-- A-Frame and AR.js scripts are loaded dynamically in `page.tsx`
-- `ar-scene.tsx` manages camera access via WebRTC (`getUserMedia`)
-- Currently uses tap-to-simulate for testing (production would use actual AR.js marker detection)
+- A-Frame is loaded dynamically in `page.tsx` via CDN
+- MindAR-Three is loaded in `ar-scene.tsx` via CDN script
+- `ar-scene.tsx` manages camera access and marker detection using MindAR API
+- MindAR uses `.mind` files (compiled image targets) for NFT tracking
 - Requires HTTPS in production (camera access restriction)
 
 **3D Object Rendering:**
-- Objects are rendered as CSS-based 3D elements (not actual glTF models yet)
-- Each object type (scroll, key, gem, portal, compass, chest) has custom CSS animations
-- Animations: fadeIn, scaleIn, bounceIn, rotateIn, portalIn, float
+- Objects are rendered as CSS-based 3D elements with animations
+- Each object type has custom CSS animations: fadeIn, scaleIn, bounceIn, rotateIn, portalIn
 
 ### File Structure
 
@@ -98,28 +93,30 @@ src/
 ├── app/
 │   ├── page.tsx              # Main quest app orchestrator
 │   ├── layout.tsx            # Root layout with metadata
-│   ├── markers/page.tsx      # Printable markers page
-│   └── api/route.ts          # API route (minimal usage)
+│   └── markers/page.tsx      # Printable markers page (if needed)
 ├── components/
 │   ├── ar/                   # AR-specific components
-│   │   ├── ar-scene.tsx      # Camera + marker detection
+│   │   ├── ar-scene.tsx      # Camera + MindAR marker detection
 │   │   ├── start-page.tsx    # Welcome screen
 │   │   ├── quest-ui.tsx      # Overlay UI
 │   │   └── error-screen.tsx  # Error handling
-│   └── ui/                   # shadcn/ui components (40+ components)
+│   └── ui/                   # Minimal shadcn/ui components
+│       ├── button.tsx
+│       ├── card.tsx
+│       └── progress.tsx
 ├── hooks/
-│   ├── use-quest.ts          # Quest state management (Zustand)
-│   ├── use-toast.ts          # Toast notifications
-│   └── use-mobile.ts         # Mobile detection
+│   └── use-quest.ts          # Quest state management (Zustand)
 └── lib/
     ├── quest-config.ts       # Quest configuration (EDIT THIS)
-    ├── utils.ts              # Utility functions (cn, etc.)
-    └── db.ts                 # Database client (unused)
+    └── utils.ts              # Utility functions (cn, etc.)
 
 public/assets/
 ├── models/                   # 3D models (.glb) - referenced but not loaded yet
 ├── sounds/                   # Sound effects (.mp3) - referenced but not loaded yet
-└── nft/                      # NFT marker descriptors (.fset, .fset3, .iset)
+└── nft/                      # NFT marker descriptors (.mind files)
+    ├── marker-1.mind
+    ├── marker-2.mind
+    └── ... (7 markers total)
 ```
 
 ## Key Implementation Details
@@ -132,36 +129,51 @@ The quest enforces strict sequential progression:
 - Finding wrong marker shows error with hint for correct marker
 - Finding already-found marker shows "already found" message
 
+### MindAR Integration
+
+**API Usage:**
+```typescript
+// Load MindAR script
+const { MindARThree } = window;
+
+// Create scanner with first marker
+const mindarThree = new MindARThree.MindARThree({
+  container: containerRef.current,
+  imageTargetSrc: '/assets/nft/marker-1.mind',
+});
+
+// Add anchor for marker detection
+const anchor = mindarThree.addAnchor(0);
+anchor.onTargetFound = () => { /* handle detection */ };
+anchor.onTargetLost = () => { /* handle loss */ };
+
+// Start camera
+await mindarThree.start();
+```
+
+**Marker Files:**
+- Each marker needs a `.mind` file in `public/assets/nft/`
+- `.mind` files are compiled from images using MindAR compiler
+- Generate at: https://hiukim.github.io/mind-ar-js-doc/tools/compile
+
 ### Camera and HTTPS Requirements
 
 - **HTTPS required** in production (except localhost) for camera access
 - Camera requests rear-facing camera (`facingMode: 'environment'`)
-- Ideal resolution: 1280×720
 - Error handling for: permission denied, camera not found, HTTPS required, browser not supported
 
 ### Dynamic Imports
 
-A-Frame only works client-side, so:
+A-Frame and MindAR only work client-side:
 - `ARScene` component uses `dynamic()` with `ssr: false`
-- A-Frame scripts loaded via `loadScript()` helper in `page.tsx`
+- Scripts loaded via `loadScript()` helper in `page.tsx` and `ar-scene.tsx`
 - Suspense boundaries handle loading states
-
-### Marker Types
-
-**Pattern markers** (AR.js):
-- `patternType: 'hiro' | 'kanji' | 'custom'`
-- Custom patterns need `.patt` file in `public/assets/markers/`
-
-**NFT markers** (MindAR - planned):
-- `nftDescriptor: '/assets/nft/tree'` (path without extension)
-- Requires `.fset`, `.fset3`, `.iset` files
-- Used for recognizing real objects (trees, benches, statues)
 
 ## Testing
 
 **Local testing:**
 - Run `npm run dev` and open `http://localhost:3000`
-- Tap screen to simulate marker detection (7 sections = 7 markers)
+- For actual AR testing, you need HTTPS (see below)
 
 **Mobile testing with HTTPS:**
 - Use ngrok: `ngrok http 3000`
@@ -178,13 +190,11 @@ A-Frame only works client-side, so:
 ```bash
 netlify deploy --prod
 ```
-Config in `netlify.toml` (build command: `npm run build`, publish: `.next`)
 
 **Vercel:**
 ```bash
 vercel --prod
 ```
-Config in `vercel.json` (auto-detects Next.js)
 
 Both platforms provide automatic HTTPS.
 
@@ -196,16 +206,11 @@ Edit `PARK_CONFIG` in `src/lib/quest-config.ts`
 **Modify quest stages:**
 Edit `STEPS` array in `src/lib/quest-config.ts` - add/remove/modify steps
 
-**Add custom markers:**
-1. Generate `.patt` file at https://ar-js-org.github.io/AR.js/three.js/examples/marker-training.html
-2. Place in `public/assets/markers/`
-3. Update step config with `patternType: 'custom'` and `patternUrl: '/assets/markers/your-marker.patt'`
-
-**Add NFT markers:**
-1. Take high-quality photo of object (1920×1080, good lighting)
-2. Generate descriptors (`.fset`, `.fset3`, `.iset`) using AR.js NFT tools
-3. Place in `public/assets/nft/`
-4. Update step config with `markerType: 'nft'` and `nftDescriptor: '/assets/nft/object-name'`
+**Add new NFT markers:**
+1. Take high-quality photo of object (1920×1080, good lighting, high contrast)
+2. Generate `.mind` file at https://hiukim.github.io/mind-ar-js-doc/tools/compile
+3. Place in `public/assets/nft/` as `marker-N.mind`
+4. Update step config with `markerType: 'nft'` and `nftDescriptor: '/assets/nft/marker-N'`
 
 **Change UI messages:**
 Edit `MESSAGES` object in `src/lib/quest-config.ts`
@@ -213,9 +218,8 @@ Edit `MESSAGES` object in `src/lib/quest-config.ts`
 ## Important Notes
 
 - This is a Russian-language application - maintain Russian for all user-facing text
-- The app uses standalone output mode (`next.config.ts`) for deployment flexibility
 - TypeScript build errors are ignored (`ignoreBuildErrors: true`) - fix if adding strict typing
 - React strict mode is disabled - re-enable if needed for development
-- Prisma is installed but not actively used - database schema exists but no active queries
 - 3D models (`.glb` files) are referenced but currently rendered as CSS - integrate actual models if needed
 - Sound files are referenced but may need to be added to `public/assets/sounds/`
+- MindAR requires `.mind` files, not `.fset`/`.iset` files (those are for AR.js NFT)
