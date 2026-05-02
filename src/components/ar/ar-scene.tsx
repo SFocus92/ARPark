@@ -45,7 +45,7 @@ export function ARScene({ onReady, onError }: ARSceneProps) {
 
         // Создаём A-Frame сцену
         const scene = document.createElement('a-scene');
-        scene.setAttribute('mindar-image', `imageTargetSrc: ${nftSteps[0].nftDescriptor}.mind; autoStart: false;`);
+        scene.setAttribute('mindar-image', `imageTargetSrc: ${nftSteps[0].nftDescriptor}.mind; autoStart: true;`);
         scene.setAttribute('color-space', 'sRGB');
         scene.setAttribute('renderer', 'colorManagement: true, physicallyCorrectLights');
         scene.setAttribute('vr-mode-ui', 'enabled: false');
@@ -91,21 +91,21 @@ export function ARScene({ onReady, onError }: ARSceneProps) {
         scene.addEventListener('loaded', () => {
           console.log('[AR] Сцена загружена');
           setStatus('Запуск камеры...');
+        });
 
-          // Запускаем AR
-          const sceneEl = scene as any;
-          if (sceneEl.systems['mindar-image-system']) {
-            sceneEl.systems['mindar-image-system'].start().then(() => {
-              console.log('[AR] AR запущен');
-              setIsLoading(false);
-              setCameraReady(true);
-              onReady?.();
-              setStatus('📷 Наведите камеру на маркер');
-            }).catch((err: any) => {
-              console.error('[AR] Ошибка запуска:', err);
-              throw err;
-            });
-          }
+        // Ждём события arReady (MindAR готов)
+        scene.addEventListener('arReady', () => {
+          console.log('[AR] AR запущен');
+          setIsLoading(false);
+          setCameraReady(true);
+          onReady?.();
+          setStatus('📷 Наведите камеру на маркер');
+        });
+
+        // Обработка ошибок AR
+        scene.addEventListener('arError', (event: any) => {
+          console.error('[AR] Ошибка AR:', event.detail);
+          throw new Error(event.detail?.message || 'Ошибка AR');
         });
 
       } catch (err: any) {

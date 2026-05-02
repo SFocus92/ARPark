@@ -1,14 +1,187 @@
 lockdown-install.js:1 SES Removing unpermitted intrinsics
-0anrkw0vo2i25.js:22 [AR] Загрузка A-Frame...
+0.hq~d3rtzubs.js:22 [AR] Загрузка A-Frame...
 index.js:95 A-Frame Version: 1.4.0 (Date 2022-12-26, Commit #60a324a2)
 index.js:96 THREE Version (https://github.com/supermedium/three.js): ^0.147.0
 index.js:98 WebVR Polyfill Version: ^0.10.12
-0anrkw0vo2i25.js:22 [AR] A-Frame загружен
-0j48ftm00qm8a.js:1 [AR] A-Frame + THREE готовы
-mindar-image-three.prod.js:1 Uncaught SyntaxError: Cannot use import statement outside a module
-0j48ftm00qm8a.js:1 [AR] MindAR скрипт загружен, window.MINDAR: false
-0j48ftm00qm8a.js:1 [AR] window.MINDAR: undefined
-t @ 0j48ftm00qm8a.js:1
-0j48ftm00qm8a.js:1 [AR] Ошибка: Error: MindAR не загружен корректно
-    at t (0j48ftm00qm8a.js:1:890)
-t @ 0j48ftm00qm8a.js:1
+0.hq~d3rtzubs.js:22 [AR] A-Frame загружен
+07wr35sbol88c.js:1 [AR] A-Frame готов
+07wr35sbol88c.js:1 [AR] MindAR-AFrame загружен
+07wr35sbol88c.js:1 [AR] MindAR загружен
+07wr35sbol88c.js:1 [AR] Сцена загружена
+07wr35sbol88c.js:1 Uncaught TypeError: Cannot read properties of undefined (reading 'then')
+    at v.<anonymous> (07wr35sbol88c.js:1:2382)
+    at v.emit (a-node.js:287:10)
+    at a-node.js:145:12
+(anonymous) @ 07wr35sbol88c.js:1
+emit @ a-node.js:287
+(anonymous) @ a-node.js:145
+Promise.then
+load @ a-node.js:132
+load @ a-entity.js:239
+(anonymous) @ a-scene.js:672
+setTimeout
+play @ a-scene.js:671
+attachedCallbackPostCamera @ a-scene.js:167
+(anonymous) @ a-scene.js:139
+emit @ a-node.js:287
+checkUserCamera @ camera.js:98
+(anonymous) @ camera.js:58
+emit @ a-node.js:287
+setObject3D @ a-entity.js:162
+init @ camera.js:28
+initComponent @ component.js:323
+updateProperties @ component.js:305
+(anonymous) @ component.js:81
+(anonymous) @ component.js:665
+initComponent @ a-entity.js:319
+updateComponent @ a-entity.js:471
+updateComponents @ a-entity.js:442
+(anonymous) @ a-entity.js:243
+(anonymous) @ a-node.js:143
+Promise.then
+load @ a-node.js:132
+load @ a-entity.js:239
+doConnectedCallback @ a-entity.js:100
+connectedCallback @ a-entity.js:70
+t @ 07wr35sbol88c.js:1
+await in t
+(anonymous) @ 07wr35sbol88c.js:1
+iv @ 0~_1x27hmki5g.js:1
+e @ 0~_1x27hmki5g.js:1
+e @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+ud @ 0~_1x27hmki5g.js:1
+up @ 0~_1x27hmki5g.js:1
+sx @ 0~_1x27hmki5g.js:1
+(anonymous) @ 0~_1x27hmki5g.js:1
+O @ 0~_1x27hmki5g.js:1
+postMessage
+i @ 0~_1x27hmki5g.js:1
+O @ 0~_1x27hmki5g.js:1
+postMessage
+i @ 0~_1x27hmki5g.js:1
+(anonymous) @ 0~_1x27hmki5g.js:1
+sH @ 0~_1x27hmki5g.js:1
+sV @ 0~_1x27hmki5g.js:1
+(anonymous) @ 0~_1x27hmki5g.js:1
+PendingScript
+(anonymous) @ turbopack-04j-q~izltgcr.js:1
+loadChunkCached @ turbopack-04j-q~izltgcr.js:1
+M @ turbopack-04j-q~izltgcr.js:1
+T @ turbopack-04j-q~izltgcr.js:1
+(anonymous) @ turbopack-04j-q~izltgcr.js:1
+(anonymous) @ 0.hq~d3rtzubs.js:22
+(anonymous) @ 0.hq~d3rtzubs.js:22
+(anonymous) @ turbopack-04j-q~izltgcr.js:1
+K.loadableGenerated.modules @ 0.hq~d3rtzubs.js:22
+(anonymous) @ 0.hq~d3rtzubs.js:17
+I @ 0fpki3y6aj230.js:1
+lT @ 0~_1x27hmki5g.js:1
+iu @ 0~_1x27hmki5g.js:1
+sd @ 0~_1x27hmki5g.js:1
+(anonymous) @ 0~_1x27hmki5g.js:1
+sf @ 0~_1x27hmki5g.js:1
+se @ 0~_1x27hmki5g.js:1
+sQ @ 0~_1x27hmki5g.js:1
+sU @ 0~_1x27hmki5g.js:1
+sV @ 0~_1x27hmki5g.js:1
+(anonymous) @ 0~_1x27hmki5g.js:1
+setTimeout
+(anonymous) @ 0.hq~d3rtzubs.js:17
+h @ 0.hq~d3rtzubs.js:17
+sJ @ 0~_1x27hmki5g.js:1
+(anonymous) @ 0~_1x27hmki5g.js:1
+tD @ 0~_1x27hmki5g.js:1
+s4 @ 0~_1x27hmki5g.js:1
+fz @ 0~_1x27hmki5g.js:1
+fT @ 0~_1x27hmki5g.js:1
