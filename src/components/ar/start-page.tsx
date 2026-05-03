@@ -77,7 +77,7 @@ export function StartPage({ onStart }: StartPageProps) {
             <Button
               onClick={handleStart}
               disabled={isLoading}
-              className="w-full h-14 sm:h-16 md:h-18 text-lg sm:text-xl md:text-2xl font-extrabold bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 hover:from-yellow-500 hover:via-orange-600 hover:to-red-600 text-white shadow-2xl transition-all duration-300 transform hover:scale-105 active:scale-95 relative overflow-hidden border-2 border-yellow-300/50"
+              className="w-full h-14 sm:h-16 md:h-20 text-lg sm:text-xl md:text-2xl font-extrabold bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 hover:from-yellow-500 hover:via-orange-600 hover:to-red-600 text-white shadow-2xl transition-all duration-300 transform hover:scale-105 active:scale-95 relative overflow-hidden border-2 border-yellow-300/50"
               style={{
                 animation: !isLoading ? 'pulse-glow 1.5s ease-in-out infinite' : 'none',
               }}
