@@ -69,9 +69,9 @@ export function ARScene({ onReady, onError }: ARSceneProps) {
             const model = document.createElement('a-gltf-model');
             model.setAttribute('src', '/assets/models/golden_key.glb');
             model.setAttribute('position', '0 0 0');
-            model.setAttribute('scale', '0.05 0.05 0.05');
-            model.setAttribute('rotation', '0 0 0');
-            model.setAttribute('animation', 'property: rotation; to: 0 360 0; loop: true; dur: 3000; easing: linear');
+            model.setAttribute('scale', '0.01 0.01 0.01');
+            model.setAttribute('rotation', '-90 0 0');
+            model.setAttribute('animation', 'property: rotation; to: -90 360 0; loop: true; dur: 3000; easing: linear');
             anchor.appendChild(model);
           } else {
             // Финальный этап - простой индикатор
