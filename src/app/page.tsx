@@ -33,12 +33,12 @@ async function loadARLibs(): Promise<boolean> {
   console.log('[AR] Загрузка A-Frame...');
   await new Promise<void>((resolve) => {
     const s = document.createElement('script');
-    // Загружаем локальный файл из public/libs/
     s.src = '/libs/aframe.min.js';
     s.async = true;
     s.onload = () => {
       console.log('[AR] A-Frame загружен');
-      resolve();
+      // Даём время на инициализацию AFRAME
+      setTimeout(() => resolve(), 100);
     };
     s.onerror = () => resolve();
     document.head.appendChild(s);

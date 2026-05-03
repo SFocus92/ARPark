@@ -319,9 +319,21 @@ function waitForGlobal(name: string, timeoutMs: number): Promise<void> {
 async function loadMindARScript(): Promise<void> {
   if ((window as any).MINDAR) return;
 
-  return new Promise((resolve, reject) => {
+  await new Promise<void>((resolve, reject) => {
     const script = document.createElement('script');
-    // Загружаем локальный файл из public/libs/
+    script.src = '/libs/mindar-image.prod.js';
+    script.type = 'text/javascript';
+    script.async = false;
+    script.onload = () => {
+      console.log('[AR] MindAR Core загружен');
+      resolve();
+    };
+    script.onerror = () => reject(new Error('Не удалось загрузить MindAR Core'));
+    document.head.appendChild(script);
+  });
+
+  await new Promise<void>((resolve, reject) => {
+    const script = document.createElement('script');
     script.src = '/libs/mindar-image-aframe.prod.js';
     script.type = 'text/javascript';
     script.async = false;
