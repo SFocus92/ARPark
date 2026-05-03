@@ -38,6 +38,7 @@ interface QuestState {
   resetQuest: () => void;
   handleMarkerFound: (markerId: string) => void;
   handleMarkerLost: () => void;
+  hideMarkerOverlay: () => void; // Скрыть центральное окно после озвучки
   setCameraReady: (ready: boolean) => void;
   setCameraError: (error: string | null) => void;
   clearMessage: () => void;
@@ -180,6 +181,15 @@ export const useQuestStore = create<QuestState>()(
           showingContent: false,
         });
       },
+
+      // ---------------------------------------------------
+      // СКРЫТЬ ЦЕНТРАЛЬНОЕ ОКНО (после озвучки)
+      // ---------------------------------------------------
+      hideMarkerOverlay: () => {
+        set({
+          showingContent: false,
+        });
+      },
       
       // ---------------------------------------------------
       // УСТАНОВИТЬ СОСТОЯНИЕ КАМЕРЫ
@@ -283,6 +293,7 @@ export function useQuest() {
     resetQuest: store.resetQuest,
     handleMarkerFound: store.handleMarkerFound,
     handleMarkerLost: store.handleMarkerLost,
+    hideMarkerOverlay: store.hideMarkerOverlay,
     setCameraReady: store.setCameraReady,
     setCameraError: store.setCameraError,
     clearMessage: store.clearMessage,

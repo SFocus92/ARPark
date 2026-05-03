@@ -36,6 +36,7 @@ export function QuestUI() {
     isComplete,
     soundEnabled,
     clearMessage,
+    hideMarkerOverlay,
     resetQuest,
     toggleSound
   } = useQuest();
@@ -62,9 +63,10 @@ export function QuestUI() {
         setIsPlayingVoice(false);
       });
 
-      // Когда аудио закончилось - скрываем сообщение
+      // Когда аудио закончилось - скрываем сообщение и центральное окно
       const handleEnded = () => {
         clearMessage();
+        hideMarkerOverlay(); // Скрываем центральное окно с названием этапа
         setIsPlayingVoice(false);
         audioRef.current = null;
       };
