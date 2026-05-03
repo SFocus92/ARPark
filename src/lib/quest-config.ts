@@ -62,6 +62,9 @@ export interface QuestStep {
   // Звук при обнаружении
   soundUrl?: string;             // Путь к звуковому файлу (.mp3)
   soundDescription?: string;     // Описание звука
+
+  // Голосовое озвучивание текста
+  voiceUrl?: string;             // Путь к голосовому файлу (.mp3) - озвучка scrollText
   
   // Анимация появления
   animation: 'fadeIn' | 'scaleIn' | 'rotateIn' | 'bounceIn' | 'portalIn';
@@ -93,6 +96,7 @@ export const STEPS: QuestStep[] = [
     scrollText: 'Привет, путник! Ты вступил на путь тайн СеваПарка. Твоя первая задача — найти древний дуб. Остерегайся ложных путей!',
     soundUrl: '/assets/sounds/discover.mp3',
     soundDescription: 'Звук обнаружения',
+    voiceUrl: '/assets/sounds/voice_quest_1.mp3',
     animation: 'fadeIn',
     scale: 1.5,
   },
@@ -114,6 +118,7 @@ export const STEPS: QuestStep[] = [
     modelUrl: '/models/shiba.glb',
     soundUrl: '/assets/sounds/magic-chime.mp3',
     soundDescription: 'Магический звон ключа',
+    voiceUrl: '/assets/sounds/voice_quest_2.mp3',
     animation: 'scaleIn',
     scale: 1.5,
   },
@@ -136,6 +141,7 @@ export const STEPS: QuestStep[] = [
     scrollText: 'Ты близок к цели! Каменный грот хранит древний секрет. Найди вход и получишь награду. Но помни — путь не прост!',
     soundUrl: '/assets/sounds/scroll-unfurl.mp3',
     soundDescription: 'Звук разворачивающегося свитка',
+    voiceUrl: '/assets/sounds/voice_quest_3.mp3',
     animation: 'fadeIn',
     scale: 1.5,
   },
@@ -157,6 +163,7 @@ export const STEPS: QuestStep[] = [
     modelUrl: '/models/trex.glb',
     soundUrl: '/assets/sounds/portal-whoosh.mp3',
     soundDescription: 'Звук портала',
+    voiceUrl: '/assets/sounds/voice_quest_4.mp3',
     animation: 'portalIn',
     scale: 1.2,
   },
@@ -178,6 +185,7 @@ export const STEPS: QuestStep[] = [
     modelUrl: '/models/cut_fish.glb',
     soundUrl: '/assets/sounds/gem-sparkle.mp3',
     soundDescription: 'Звук сияющего кристалла',
+    voiceUrl: '/assets/sounds/voice_quest_5.mp3',
     animation: 'bounceIn',
     scale: 1.5,
   },
@@ -199,6 +207,7 @@ export const STEPS: QuestStep[] = [
     modelUrl: '/models/stylized_ww1_plane.glb',
     soundUrl: '/assets/sounds/compass-click.mp3',
     soundDescription: 'Звук компаса',
+    voiceUrl: '/assets/sounds/voice_quest_6.mp3',
     animation: 'rotateIn',
     scale: 1.5,
   },
@@ -220,6 +229,7 @@ export const STEPS: QuestStep[] = [
     modelUrl: '/models/chest.glb',
     soundUrl: '/assets/sounds/victory-fanfare.mp3',
     soundDescription: 'Победная фанфара',
+    voiceUrl: '/assets/sounds/voice_quest_7.mp3',
     animation: 'scaleIn',
     scale: 1.5,
   },

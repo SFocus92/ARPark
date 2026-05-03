@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Card, CardContent } from '@/components/ui/card';
 import { PARK_CONFIG, STEPS } from '@/lib/quest-config';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   RotateCcw,
   X,
@@ -42,6 +42,7 @@ export function QuestUI() {
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [showHint, setShowHint] = useState(true);
   const [lastStepId, setLastStepId] = useState<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Автозакрытие уведомлений через 4-5 секунд
   useEffect(() => {
@@ -53,6 +54,30 @@ export function QuestUI() {
       return () => clearTimeout(timeout);
     }
   }, [message, clearMessage]);
+
+  // Воспроизведение голоса и автоскрытие после окончания
+  useEffect(() => {
+    if (message && messageType === 'success' && currentStep?.voiceUrl && soundEnabled) {
+      // Создаём и воспроизводим аудио
+      const audio = new Audio(currentStep.voiceUrl);
+      audioRef.current = audio;
+
+      audio.play().catch(err => {
+        console.error('[Audio] Ошибка воспроизведения:', err);
+      });
+
+      // Когда аудио закончилось - скрываем сообщение
+      audio.addEventListener('ended', () => {
+        clearMessage();
+      });
+
+      return () => {
+        audio.pause();
+        audio.currentTime = 0;
+        audioRef.current = null;
+      };
+    }
+  }, [message, messageType, currentStep, soundEnabled, clearMessage]);
 
   // Показываем подсказку при смене этапа и автоматически скрываем через 8 секунд
   useEffect(() => {
