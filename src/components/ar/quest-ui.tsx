@@ -40,6 +40,8 @@ export function QuestUI() {
   } = useQuest();
 
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [showHint, setShowHint] = useState(true);
+  const [lastStepId, setLastStepId] = useState<string | null>(null);
 
   // Автозакрытие уведомлений через 4-5 секунд
   useEffect(() => {
@@ -51,6 +53,20 @@ export function QuestUI() {
       return () => clearTimeout(timeout);
     }
   }, [message, clearMessage]);
+
+  // Показываем подсказку при смене этапа и автоматически скрываем через 8 секунд
+  useEffect(() => {
+    if (currentStep && currentStep.id !== lastStepId) {
+      setShowHint(true);
+      setLastStepId(currentStep.id);
+
+      const timeout = setTimeout(() => {
+        setShowHint(false);
+      }, 8000); // 8 секунд на чтение подсказки
+
+      return () => clearTimeout(timeout);
+    }
+  }, [currentStep, lastStepId]);
   
   const handleReset = () => {
     if (showResetConfirm) {
@@ -113,12 +129,22 @@ export function QuestUI() {
               className="h-2 sm:h-3 bg-white/20"
             />
             
-            {/* Подсказка для текущего шага */}
-            {currentStep && !isComplete && (
-              <div className="mt-2 bg-amber-500/20 rounded-lg p-2 sm:p-3">
-                <div className="flex items-center gap-1 sm:gap-2 text-amber-400 text-sm sm:text-base md:text-lg font-semibold">
-                  <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />
-                  <span>Этап {currentStep.order} из 7: {currentStep.title}</span>
+            {/* Подсказка для текущего шага - автоматически исчезает через 8 секунд */}
+            {currentStep && !isComplete && showHint && (
+              <div className="mt-2 bg-amber-500/20 rounded-lg p-2 sm:p-3 animate-in fade-in slide-in-from-top duration-300">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-1 sm:gap-2 text-amber-400 text-sm sm:text-base md:text-lg font-semibold flex-1">
+                    <MapPin className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+                    <span>Этап {currentStep.order} из 7: {currentStep.title}</span>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowHint(false)}
+                    className="h-6 w-6 p-0 text-amber-400/70 hover:text-amber-400 hover:bg-amber-500/20 flex-shrink-0"
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
                 </div>
                 <p className="text-white/70 text-xs sm:text-sm md:text-base mt-1 line-clamp-2">
                   {currentStep.location}
@@ -256,6 +282,18 @@ export function QuestUI() {
               <p className="text-amber-400/70 text-xs sm:text-sm text-center mt-1">
                 💡 Для теста: тапните по экрану для имитации
               </p>
+              {/* Кнопка показа подсказки */}
+              {!showHint && currentStep && (
+                <Button
+                  onClick={() => setShowHint(true)}
+                  variant="ghost"
+                  size="sm"
+                  className="w-full mt-2 text-amber-400/70 hover:text-amber-400 hover:bg-amber-500/10 text-xs sm:text-sm"
+                >
+                  <Info className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+                  Показать подсказку
+                </Button>
+              )}
             </CardContent>
           </Card>
         </div>
