@@ -72,11 +72,14 @@ src/
 └── lib/
     └── quest-config.ts    # Конфигурация квеста
 
-public/assets/
-├── nft-sources/           # Оптимизированные фото для NFT
-├── nft/                   # NFT-дескрипторы (.fset, .fset3, .iset)
-├── models/                # 3D-модели (.glb)
-└── sounds/                # Звуковые эффекты
+public/
+├── libs/                  # Локальные AR-библиотеки (A-Frame, MindAR)
+├── assets/
+│   ├── nft-sources/       # Фото для маркеров
+│   ├── nft/               # NFT-дескрипторы (.mind файлы)
+│   ├── models/            # 3D-модели (.glb)
+│   └── sounds/            # Звуковые эффекты
+└── favicon.svg
 ```
 
 ## 🎮 Как играть
@@ -89,35 +92,14 @@ public/assets/
 
 ## 🔧 Настройка NFT-маркеров
 
-### Шаг 1: Оптимизация фотографий (уже сделано)
+### Генерация .mind файлов
 
-```bash
-node scripts/optimize-photos.js
-```
+1. Откройте https://hiukim.github.io/mind-ar-js-doc/tools/compile
+2. Загрузите фото маркера (или несколько для группы)
+3. Скачайте `.mind` файл
+4. Переименуйте в `marker-N.mind` и поместите в `public/assets/nft/`
 
-Результат: `public/assets/nft-sources/marker-1.jpg` до `marker-7.jpg`
-
-### Шаг 2: Генерация NFT-дескрипторов
-
-1. Откройте https://carnaux.github.io/NFT-Marker-Creator/
-2. Загрузите каждый `marker-X.jpg` из `public/assets/nft-sources/`
-3. Нажмите "Generate" и скачайте 3 файла: `.fset`, `.fset3`, `.iset`
-4. Переименуйте их в `marker-X.fset`, `marker-X.fset3`, `marker-X.iset`
-5. Поместите все файлы в `public/assets/nft/`
-
-**Важно:** Без NFT-дескрипторов AR-распознавание работать не будет. Используйте tap-to-simulate для тестирования логики.
-
-## 🎯 Этапы квеста
-
-| Этап | Название | Фото | Маркер |
-|------|----------|------|--------|
-| 1 | Главные ворота | photo_21-17-01.jpg | marker-1 |
-| 2 | Древний дуб | photo_21-17-06.jpg | marker-2 |
-| 3 | Тайная скамейка | photo_21-17-08.jpg | marker-3 |
-| 4 | Каменный грот | photo_21-17-12.jpg | marker-4 |
-| 5 | Мост желаний | photo_21-17-13.jpg | marker-5 |
-| 6 | Статуя дракона | photo_21-17-15.jpg | marker-6 |
-| 7 | Озеро сокровищ | photo_21-17-17.jpg | marker-7 |
+**Важно:** Без `.mind` файлов AR-распознавание работать не будет. В режиме разработки используйте tap-to-simulate (тап по экрану) для тестирования.
 
 ## ⚙️ Кастомизация
 
@@ -129,7 +111,7 @@ node scripts/optimize-photos.js
 export const PARK_CONFIG = {
   name: "СеваПарк",
   promoCode: "ВАШ_КОД_2024",
-  discount: "20%",
+  discount: "25%",
 };
 ```
 
