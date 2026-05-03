@@ -62,8 +62,8 @@ export function ARScene({ onReady, onError }: ARSceneProps) {
           const anchor = document.createElement('a-entity');
           anchor.setAttribute('mindar-image-target', `targetIndex: ${index}`);
 
-          // Для этапов 1-6 показываем 3D модель ключа
-          // Для этапа 7 (финального) показываем простой индикатор
+          // Только для этапов 1-6 показываем 3D модель ключа
+          // Этап 7 (финальный) - без 3D объекта, только событие
           if (step.order < 7) {
             // 3D модель золотого ключа
             const model = document.createElement('a-gltf-model');
@@ -73,16 +73,8 @@ export function ARScene({ onReady, onError }: ARSceneProps) {
             model.setAttribute('rotation', '-90 0 0');
             model.setAttribute('animation', 'property: rotation; to: -90 360 0; loop: true; dur: 3000; easing: linear');
             anchor.appendChild(model);
-          } else {
-            // Финальный этап - простой индикатор
-            const box = document.createElement('a-box');
-            box.setAttribute('position', '0 0 0');
-            box.setAttribute('scale', '0.5 0.5 0.5');
-            box.setAttribute('color', '#fbbf24');
-            box.setAttribute('opacity', '0.9');
-            box.setAttribute('animation', 'property: rotation; to: 0 360 0; loop: true; dur: 2000; easing: linear');
-            anchor.appendChild(box);
           }
+          // Для этапа 7 не добавляем никакой 3D объект - только обработчик события
 
           // Обработчики событий
           anchor.addEventListener('targetFound', () => {
