@@ -28,7 +28,8 @@ export const metadata: Metadata = {
   keywords: ["AR", "квест", "парк", "дополненная реальность", "игра", "СеваПарк"],
   authors: [{ name: "СеваПарк" }],
   icons: {
-    icon: "/favicon.ico",
+    icon: "/favicon.svg",
+    apple: "/favicon.svg",
   },
   openGraph: {
     title: "AR-Квест | СеваПарк",
