@@ -22,6 +22,7 @@ interface QuestState {
   // Текущее состояние AR
   currentMarker: string | null;
   showingContent: boolean;
+  lastFoundStep: QuestStep | null; // Последний найденный этап для озвучки
   message: string | null;
   messageType: 'success' | 'error' | 'info' | null;
   
@@ -59,6 +60,7 @@ export const useQuestStore = create<QuestState>()(
       isComplete: false,
       currentMarker: null,
       showingContent: false,
+      lastFoundStep: null,
       message: null,
       messageType: null,
       cameraReady: false,
@@ -136,6 +138,7 @@ export const useQuestStore = create<QuestState>()(
           set({
             currentMarker: markerId,
             showingContent: true,
+            lastFoundStep: foundStep, // Сохраняем найденный этап для озвучки
             completedSteps: newCompletedSteps,
             foundMarkers: [...state.foundMarkers, markerId],
             isComplete: isNowComplete,

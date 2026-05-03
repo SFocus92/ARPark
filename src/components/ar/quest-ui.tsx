@@ -7,6 +7,7 @@
 'use client';
 
 import { useQuest } from '@/hooks/use-quest';
+import { useQuestStore } from '@/hooks/use-quest';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Card, CardContent } from '@/components/ui/card';
@@ -39,6 +40,8 @@ export function QuestUI() {
     toggleSound
   } = useQuest();
 
+  const lastFoundStep = useQuestStore(state => state.lastFoundStep);
+
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [showHint, setShowHint] = useState(true);
   const [lastStepId, setLastStepId] = useState<string | null>(null);
@@ -57,9 +60,9 @@ export function QuestUI() {
 
   // Воспроизведение голоса и автоскрытие после окончания
   useEffect(() => {
-    if (message && messageType === 'success' && currentStep?.voiceUrl && soundEnabled) {
+    if (message && messageType === 'success' && lastFoundStep?.voiceUrl && soundEnabled) {
       // Создаём и воспроизводим аудио
-      const audio = new Audio(currentStep.voiceUrl);
+      const audio = new Audio(lastFoundStep.voiceUrl);
       audioRef.current = audio;
 
       audio.play().catch(err => {
@@ -77,7 +80,7 @@ export function QuestUI() {
         audioRef.current = null;
       };
     }
-  }, [message, messageType, currentStep, soundEnabled, clearMessage]);
+  }, [message, messageType, lastFoundStep, soundEnabled, clearMessage]);
 
   // Показываем подсказку при смене этапа и автоматически скрываем через 8 секунд
   useEffect(() => {
