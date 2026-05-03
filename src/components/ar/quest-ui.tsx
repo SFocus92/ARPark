@@ -46,41 +46,38 @@ export function QuestUI() {
   const [showHint, setShowHint] = useState(true);
   const [lastStepId, setLastStepId] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-
-  // Автозакрытие уведомлений через 4-5 секунд
-  useEffect(() => {
-    if (message) {
-      const timeout = setTimeout(() => {
-        clearMessage();
-      }, 4500); // 4.5 секунды
-
-      return () => clearTimeout(timeout);
-    }
-  }, [message, clearMessage]);
+  const [isPlayingVoice, setIsPlayingVoice] = useState(false);
 
   // Воспроизведение голоса и автоскрытие после окончания
   useEffect(() => {
-    if (message && messageType === 'success' && lastFoundStep?.voiceUrl && soundEnabled) {
+    if (message && messageType === 'success' && lastFoundStep?.voiceUrl && soundEnabled && !isPlayingVoice) {
+      setIsPlayingVoice(true);
+
       // Создаём и воспроизводим аудио
       const audio = new Audio(lastFoundStep.voiceUrl);
       audioRef.current = audio;
 
       audio.play().catch(err => {
         console.error('[Audio] Ошибка воспроизведения:', err);
+        setIsPlayingVoice(false);
       });
 
       // Когда аудио закончилось - скрываем сообщение
-      audio.addEventListener('ended', () => {
+      const handleEnded = () => {
         clearMessage();
-      });
-
-      return () => {
-        audio.pause();
-        audio.currentTime = 0;
+        setIsPlayingVoice(false);
         audioRef.current = null;
       };
+
+      audio.addEventListener('ended', handleEnded);
+
+      // Cleanup только при размонтировании компонента, НЕ при изменении message
+      return () => {
+        audio.removeEventListener('ended', handleEnded);
+        // НЕ останавливаем аудио - пусть доиграет до конца
+      };
     }
-  }, [message, messageType, lastFoundStep, soundEnabled, clearMessage]);
+  }, [lastFoundStep, soundEnabled]); // Убрали message из зависимостей!
 
   // Показываем подсказку при смене этапа и автоматически скрываем через 8 секунд
   useEffect(() => {
