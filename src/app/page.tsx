@@ -33,10 +33,9 @@ async function loadARLibs(): Promise<boolean> {
   console.log('[AR] Загрузка A-Frame...');
   await new Promise<void>((resolve) => {
     const s = document.createElement('script');
-    // Используем unpkg.com - более быстрый и доступный CDN
-    s.src = 'https://unpkg.com/aframe@1.4.0/dist/aframe-master.min.js';
+    // Загружаем локальный файл из public/libs/
+    s.src = '/libs/aframe.min.js';
     s.async = true;
-    s.crossOrigin = 'anonymous';
     s.onload = () => {
       console.log('[AR] A-Frame загружен');
       resolve();
