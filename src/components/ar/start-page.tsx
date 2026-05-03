@@ -63,7 +63,7 @@ export function StartPage({ onStart }: StartPageProps) {
         <Card className="w-full bg-white/95 backdrop-blur-sm shadow-2xl border-0 mb-6">
           <CardContent className="p-4 sm:p-6">
             {/* Описание */}
-            <div className="text-center mb-4 sm:mb-6">
+            <div className="text-center mb-5 sm:mb-6">
               <p className="text-base sm:text-lg md:text-xl text-gray-700 leading-relaxed font-medium">
                 Добро пожаловать в AR-квест парка{' '}
                 <span className="font-bold text-green-700">{PARK_CONFIG.name}</span>!
@@ -71,22 +71,6 @@ export function StartPage({ onStart }: StartPageProps) {
               <p className="text-sm sm:text-base text-gray-600 mt-2 sm:mt-3">
                 Найдите тайные метки, разгадайте загадки и получите награду!
               </p>
-            </div>
-
-            {/* Инструкции */}
-            <div className="space-y-3 sm:space-y-4 mb-5 sm:mb-7">
-              <div className="flex items-start gap-3 sm:gap-4 text-gray-600">
-                <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-green-600 mt-0.5 flex-shrink-0" />
-                <span className="text-sm sm:text-base md:text-lg">Ходите по парку и ищите спрятанные маркеры</span>
-              </div>
-              <div className="flex items-start gap-3 sm:gap-4 text-gray-600">
-                <Camera className="w-5 h-5 sm:w-6 sm:h-6 text-green-600 mt-0.5 flex-shrink-0" />
-                <span className="text-sm sm:text-base md:text-lg">Наводите камеру на маркеры для обнаружения</span>
-              </div>
-              <div className="flex items-start gap-3 sm:gap-4 text-gray-600">
-                <Compass className="w-5 h-5 sm:w-6 sm:h-6 text-green-600 mt-0.5 flex-shrink-0" />
-                <span className="text-sm sm:text-base md:text-lg">Соберите все метки и получите промокод</span>
-              </div>
             </div>
 
             {/* Кнопка "Начать" с пульсацией и градиентом */}
@@ -144,6 +128,22 @@ export function StartPage({ onStart }: StartPageProps) {
               )}
             </Button>
 
+            {/* Инструкции */}
+            <div className="space-y-3 sm:space-y-4 mt-5 sm:mt-6">
+              <div className="flex items-start gap-3 sm:gap-4 text-gray-600">
+                <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-green-600 mt-0.5 flex-shrink-0" />
+                <span className="text-sm sm:text-base md:text-lg">Ходите по парку и ищите спрятанные маркеры</span>
+              </div>
+              <div className="flex items-start gap-3 sm:gap-4 text-gray-600">
+                <Camera className="w-5 h-5 sm:w-6 sm:h-6 text-green-600 mt-0.5 flex-shrink-0" />
+                <span className="text-sm sm:text-base md:text-lg">Наводите камеру на маркеры для обнаружения</span>
+              </div>
+              <div className="flex items-start gap-3 sm:gap-4 text-gray-600">
+                <Compass className="w-5 h-5 sm:w-6 sm:h-6 text-green-600 mt-0.5 flex-shrink-0" />
+                <span className="text-sm sm:text-base md:text-lg">Соберите все метки и получите промокод</span>
+              </div>
+            </div>
+
             {/* Предупреждение для iOS */}
             <div className="mt-4 sm:mt-5 p-3 sm:p-4 bg-amber-50 border-2 border-amber-200 rounded-lg">
               <div className="flex items-start gap-2 sm:gap-3">
@@ -155,11 +155,6 @@ export function StartPage({ onStart }: StartPageProps) {
             </div>
           </CardContent>
         </Card>
-
-        {/* Подпись */}
-        <p className="text-white/60 text-xs sm:text-sm text-center">
-          Для работы требуется камера и HTTPS-соединение
-        </p>
       </div>
     </div>
   );
