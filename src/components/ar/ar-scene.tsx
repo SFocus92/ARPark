@@ -136,7 +136,15 @@ export function ARScene({ onReady, onError }: ARSceneProps) {
   const displayStep = currentMarker && showingContent ? STEPS.find(s => s.id === currentMarker) : null;
 
   return (
-    <div ref={containerRef} style={{ position: 'fixed', inset: 0, zIndex: 0, background: '#000' }}>
+    <div ref={containerRef} style={{
+      position: 'fixed',
+      inset: 0,
+      zIndex: 0,
+      background: '#000',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }}>
       <StatusBar status={status} />
       <ProgressBar current={completedSteps} total={STEPS.length} title={currentStep?.title} />
       {displayStep && <MarkerOverlay step={displayStep} />}
@@ -153,10 +161,10 @@ export function ARScene({ onReady, onError }: ARSceneProps) {
 function StatusBar({ status }: { status: string }) {
   return (
     <div style={{
-      position: 'absolute', top: 'clamp(8px, 2vh, 15px)', left: '50%', transform: 'translateX(-50%)',
-      background: 'rgba(0,0,0,0.92)', padding: 'clamp(6px, 1.5vh, 10px) clamp(12px, 3vw, 20px)', 
-      borderRadius: 'clamp(15px, 4vw, 25px)', color: '#4ade80', 
-      fontSize: 'clamp(11px, 2.5vw, 14px)', fontWeight: 'bold', zIndex: 60,
+      position: 'absolute', top: 'clamp(10px, 2.5vh, 20px)', left: '50%', transform: 'translateX(-50%)',
+      background: 'rgba(0,0,0,0.92)', padding: 'clamp(8px, 2vh, 14px) clamp(16px, 4vw, 24px)',
+      borderRadius: 'clamp(18px, 5vw, 30px)', color: '#4ade80',
+      fontSize: 'clamp(13px, 3.5vw, 18px)', fontWeight: 'bold', zIndex: 60,
       border: '2px solid #4ade80', maxWidth: '90%', textAlign: 'center', wordBreak: 'break-word',
     }}>
       {status}
@@ -168,15 +176,15 @@ function ProgressBar({ current, total, title }: { current: number; total: number
   const pct = Math.round((current / total) * 100);
   return (
     <div style={{
-      position: 'absolute', bottom: 'clamp(10px, 2vh, 20px)', left: '50%', transform: 'translateX(-50%)',
-      background: 'rgba(0,0,0,0.88)', padding: 'clamp(8px, 2vh, 12px) clamp(12px, 3vw, 20px)', 
-      borderRadius: 'clamp(15px, 4vw, 25px)', color: 'white', 
-      fontSize: 'clamp(11px, 2.5vw, 14px)', zIndex: 50, maxWidth: '95%', textAlign: 'center',
+      position: 'absolute', bottom: 'clamp(12px, 2.5vh, 24px)', left: '50%', transform: 'translateX(-50%)',
+      background: 'rgba(0,0,0,0.88)', padding: 'clamp(10px, 2.5vh, 16px) clamp(16px, 4vw, 24px)',
+      borderRadius: 'clamp(18px, 5vw, 30px)', color: 'white',
+      fontSize: 'clamp(13px, 3.5vw, 18px)', zIndex: 50, maxWidth: '95%', textAlign: 'center',
     }}>
       <div style={{ fontWeight: 'bold', fontSize: 'inherit' }}>
         📍 {current + 1}/{total}: {title || '...'}
       </div>
-      <div style={{ marginTop: 6, height: 4, background: 'rgba(255,255,255,0.2)', borderRadius: 2, overflow: 'hidden' }}>
+      <div style={{ marginTop: 8, height: 5, background: 'rgba(255,255,255,0.2)', borderRadius: 3, overflow: 'hidden' }}>
         <div style={{ height: '100%', width: pct + '%', background: 'linear-gradient(90deg, #4ade80, #22c55e)', transition: 'width 0.5s ease' }} />
       </div>
     </div>
@@ -191,53 +199,53 @@ function MarkerOverlay({ step }: { step: QuestStep }) {
     }}>
       <div style={{ textAlign: 'center', transform: 'scale(' + Math.min(step.scale, 0.8) + ')', maxWidth: '100%', width: '100%', wordBreak: 'break-word' }}>
         <div style={{
-          width: 'clamp(50px, 12vw, 80px)', height: 'clamp(50px, 12vw, 80px)',
+          width: 'clamp(60px, 15vw, 100px)', height: 'clamp(60px, 15vw, 100px)',
           margin: '0 auto', borderRadius: '50%',
           background: 'radial-gradient(circle, #4ade80, #3b82f6)',
           boxShadow: '0 0 30px rgba(74,222,128,0.5), 0 0 60px rgba(59,130,246,0.3)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>
-          <span style={{ fontSize: 'clamp(24px, 7vw, 36px)' }}>🎯</span>
+          <span style={{ fontSize: 'clamp(28px, 8vw, 42px)' }}>🎯</span>
         </div>
-        
+
         <p style={{
-          color: 'white', fontSize: 'clamp(16px, 5vw, 24px)', fontWeight: 'bold', marginTop: 12,
+          color: 'white', fontSize: 'clamp(18px, 5.5vw, 28px)', fontWeight: 'bold', marginTop: 16,
           textShadow: '0 2px 10px rgba(0,0,0,0.5)', padding: '0 10px',
         }}>
           {step.title}
         </p>
-        
+
         {step.scrollText && (
           <div style={{
-            marginTop: 10, background: 'rgba(0,0,0,0.85)', border: '2px solid rgba(250,204,21,0.5)',
-            borderRadius: 10, padding: 'clamp(6px, 1.5vw, 12px)', maxWidth: '100%', marginLeft: 'auto', marginRight: 'auto',
+            marginTop: 12, background: 'rgba(0,0,0,0.85)', border: '2px solid rgba(250,204,21,0.5)',
+            borderRadius: 12, padding: 'clamp(8px, 2vw, 14px)', maxWidth: '100%', marginLeft: 'auto', marginRight: 'auto',
           }}>
-            <p style={{ color: '#fde047', fontSize: 'clamp(11px, 2.5vw, 14px)', margin: 0, lineHeight: 1.4 }}>
+            <p style={{ color: '#fde047', fontSize: 'clamp(13px, 3vw, 16px)', margin: 0, lineHeight: 1.5 }}>
               {step.scrollText}
             </p>
           </div>
         )}
-        
+
         {step.clueForNext && (
           <div style={{
-            marginTop: 8, background: 'rgba(30,58,138,0.9)', border: '1px solid rgba(96,165,250,0.4)',
-            borderRadius: 8, padding: 'clamp(6px, 1.5vw, 10px)', maxWidth: '100%', marginLeft: 'auto', marginRight: 'auto',
+            marginTop: 10, background: 'rgba(30,58,138,0.9)', border: '1px solid rgba(96,165,250,0.4)',
+            borderRadius: 10, padding: 'clamp(8px, 2vw, 12px)', maxWidth: '100%', marginLeft: 'auto', marginRight: 'auto',
           }}>
-            <p style={{ color: '#93c5fd', fontSize: 'clamp(10px, 2.5vw, 13px)', margin: 0 }}>
+            <p style={{ color: '#93c5fd', fontSize: 'clamp(12px, 3vw, 15px)', margin: 0 }}>
               💡 {step.clueForNext}
             </p>
           </div>
         )}
-        
+
         {step.id === 'marker_lake' && (
           <div style={{
-            marginTop: 15, background: 'linear-gradient(90deg, #fbbf24, #f59e0b)',
-            borderRadius: 12, padding: 'clamp(10px, 2.5vw, 16px)', maxWidth: '80%', marginLeft: 'auto', marginRight: 'auto',
+            marginTop: 18, background: 'linear-gradient(90deg, #fbbf24, #f59e0b)',
+            borderRadius: 14, padding: 'clamp(12px, 3vw, 18px)', maxWidth: '80%', marginLeft: 'auto', marginRight: 'auto',
           }}>
-            <p style={{ color: 'white', fontSize: 'clamp(20px, 5vw, 28px)', fontWeight: 'bold', margin: 0 }}>
+            <p style={{ color: 'white', fontSize: 'clamp(22px, 6vw, 32px)', fontWeight: 'bold', margin: 0 }}>
               🎉 SEVA2024AR
             </p>
-            <p style={{ color: 'white', fontSize: 'clamp(12px, 3vw, 16px)', marginTop: 4 }}>
+            <p style={{ color: 'white', fontSize: 'clamp(14px, 3.5vw, 18px)', marginTop: 6 }}>
               Скидка 25%!
             </p>
           </div>
@@ -254,11 +262,11 @@ function LoadingScreen({ status }: { status: string }) {
       alignItems: 'center', justifyContent: 'center', background: '#000', color: 'white', zIndex: 100,
     }}>
       <div style={{
-        width: 'clamp(40px, 10vw, 50px)', height: 'clamp(40px, 10vw, 50px)',
+        width: 'clamp(50px, 12vw, 60px)', height: 'clamp(50px, 12vw, 60px)',
         border: '4px solid rgba(255,255,255,0.2)', borderTop: '4px solid #4ade80',
         borderRadius: '50%', animation: 'spin 1s linear infinite',
       }} />
-      <p style={{ marginTop: 'clamp(12px, 3vw, 16px)', fontSize: 'clamp(14px, 3vw, 16px)' }}>{status}</p>
+      <p style={{ marginTop: 'clamp(16px, 4vw, 20px)', fontSize: 'clamp(15px, 3.5vw, 18px)' }}>{status}</p>
     </div>
   );
 }
@@ -270,9 +278,9 @@ function ErrorScreen({ error }: { error: string }) {
       alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.95)',
       color: 'white', zIndex: 100, padding: 20, textAlign: 'center',
     }}>
-      <p style={{ fontSize: 'clamp(32px, 10vw, 48px)', marginBottom: 10 }}>⚠️</p>
-      <p style={{ fontSize: 'clamp(14px, 4vw, 20px)', color: '#ef4444', marginBottom: 10 }}>Ошибка AR</p>
-      <p style={{ fontSize: 'clamp(11px, 3vw, 14px)', opacity: 0.8, maxWidth: '90%', wordBreak: 'break-word' }}>{error}</p>
+      <p style={{ fontSize: 'clamp(36px, 12vw, 56px)', marginBottom: 12 }}>⚠️</p>
+      <p style={{ fontSize: 'clamp(16px, 4.5vw, 22px)', color: '#ef4444', marginBottom: 12 }}>Ошибка AR</p>
+      <p style={{ fontSize: 'clamp(13px, 3.5vw, 16px)', opacity: 0.8, maxWidth: '90%', wordBreak: 'break-word' }}>{error}</p>
     </div>
   );
 }

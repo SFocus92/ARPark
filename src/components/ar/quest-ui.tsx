@@ -11,13 +11,13 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Card, CardContent } from '@/components/ui/card';
 import { PARK_CONFIG, STEPS } from '@/lib/quest-config';
-import { useState } from 'react';
-import { 
-  RotateCcw, 
-  X, 
-  CheckCircle2, 
-  AlertCircle, 
-  Info, 
+import { useState, useEffect } from 'react';
+import {
+  RotateCcw,
+  X,
+  CheckCircle2,
+  AlertCircle,
+  Info,
   ChevronRight,
   Trophy,
   Gift,
@@ -27,19 +27,30 @@ import {
 } from 'lucide-react';
 
 export function QuestUI() {
-  const { 
-    progress, 
-    currentStep, 
-    message, 
-    messageType, 
+  const {
+    progress,
+    currentStep,
+    message,
+    messageType,
     isComplete,
     soundEnabled,
     clearMessage,
     resetQuest,
     toggleSound
   } = useQuest();
-  
+
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+
+  // Автозакрытие уведомлений через 4-5 секунд
+  useEffect(() => {
+    if (message) {
+      const timeout = setTimeout(() => {
+        clearMessage();
+      }, 4500); // 4.5 секунды
+
+      return () => clearTimeout(timeout);
+    }
+  }, [message, clearMessage]);
   
   const handleReset = () => {
     if (showResetConfirm) {
@@ -56,16 +67,16 @@ export function QuestUI() {
       {/* =====================================================
           ВЕРХНИЙ БАР С ПРОГРЕССОМ
           ===================================================== */}
-      <div className="fixed top-0 left-0 right-0 z-50 p-2 sm:p-3">
+      <div className="fixed top-0 left-0 right-0 z-50 p-2 sm:p-3 md:p-4">
         <Card className="bg-black/80 backdrop-blur-md border-white/20 shadow-xl">
-          <CardContent className="p-2 sm:p-3">
+          <CardContent className="p-3 sm:p-4">
             {/* Заголовок и прогресс */}
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
-                <span className="text-white font-bold text-sm sm:text-base">
+                <span className="text-white font-bold text-base sm:text-lg md:text-xl">
                   {PARK_CONFIG.name}
                 </span>
-                <span className="text-amber-400 text-xs sm:text-sm font-semibold">
+                <span className="text-amber-400 text-sm sm:text-base md:text-lg font-semibold">
                   {progress.current}/{progress.total}
                 </span>
               </div>
@@ -104,12 +115,12 @@ export function QuestUI() {
             
             {/* Подсказка для текущего шага */}
             {currentStep && !isComplete && (
-              <div className="mt-2 bg-amber-500/20 rounded-lg p-2">
-                <div className="flex items-center gap-1 text-amber-400 text-xs sm:text-sm font-semibold">
-                  <MapPin className="w-3 h-3 sm:w-4 sm:h-4" />
+              <div className="mt-2 bg-amber-500/20 rounded-lg p-2 sm:p-3">
+                <div className="flex items-center gap-1 sm:gap-2 text-amber-400 text-sm sm:text-base md:text-lg font-semibold">
+                  <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />
                   <span>Этап {currentStep.order} из 7: {currentStep.title}</span>
                 </div>
-                <p className="text-white/70 text-xs mt-1 line-clamp-2">
+                <p className="text-white/70 text-xs sm:text-sm md:text-base mt-1 line-clamp-2">
                   {currentStep.location}
                 </p>
               </div>
@@ -117,8 +128,8 @@ export function QuestUI() {
             
             {/* Если квест завершён */}
             {isComplete && (
-              <div className="mt-2 flex items-center gap-1 text-green-400 text-xs sm:text-sm font-semibold">
-                <CheckCircle2 className="w-3 h-3 sm:w-4 sm:h-4" />
+              <div className="mt-2 flex items-center gap-1 sm:gap-2 text-green-400 text-sm sm:text-base md:text-lg font-semibold">
+                <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
                 <span>🏆 Квест пройден! Найдите промокод!</span>
               </div>
             )}
@@ -150,30 +161,30 @@ export function QuestUI() {
       </div>
       
       {/* =====================================================
-          СООБЩЕНИЯ ДЛЯ ИГРОКА
+          СООБЩЕНИЯ ДЛЯ ИГРОКА (только верхние уведомления)
           ===================================================== */}
       {message && (
-        <div className="fixed top-36 sm:top-40 left-2 right-2 sm:left-3 sm:right-3 z-50">
-          <Card className={`backdrop-blur-md border shadow-xl animate-in slide-in-from-top duration-300 ${
-            messageType === 'success' ? 'bg-green-600/90 border-green-400' :
-            messageType === 'error' ? 'bg-red-600/90 border-red-400' :
-            'bg-blue-600/90 border-blue-400'
+        <div className="fixed top-36 sm:top-40 md:top-44 left-2 right-2 sm:left-3 sm:right-3 md:left-4 md:right-4 z-50">
+          <Card className={`backdrop-blur-md border-2 shadow-2xl animate-in slide-in-from-top duration-300 ${
+            messageType === 'success' ? 'bg-green-600/95 border-green-400' :
+            messageType === 'error' ? 'bg-red-600/95 border-red-400' :
+            'bg-blue-600/95 border-blue-400'
           }`}>
-            <CardContent className="p-3 sm:p-4">
-              <div className="flex items-start gap-2">
-                {messageType === 'success' && <CheckCircle2 className="w-5 h-5 text-white flex-shrink-0 mt-0.5" />}
-                {messageType === 'error' && <AlertCircle className="w-5 h-5 text-white flex-shrink-0 mt-0.5" />}
-                {messageType === 'info' && <Info className="w-5 h-5 text-white flex-shrink-0 mt-0.5" />}
-                
-                <p className="text-white text-sm sm:text-base flex-1 whitespace-pre-wrap">{message}</p>
-                
+            <CardContent className="p-3 sm:p-4 md:p-5">
+              <div className="flex items-start gap-2 sm:gap-3">
+                {messageType === 'success' && <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6 text-white flex-shrink-0 mt-0.5" />}
+                {messageType === 'error' && <AlertCircle className="w-5 h-5 sm:w-6 sm:h-6 text-white flex-shrink-0 mt-0.5" />}
+                {messageType === 'info' && <Info className="w-5 h-5 sm:w-6 sm:h-6 text-white flex-shrink-0 mt-0.5" />}
+
+                <p className="text-white text-sm sm:text-base md:text-lg flex-1 whitespace-pre-wrap leading-relaxed">{message}</p>
+
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={clearMessage}
-                  className="h-6 w-6 p-0 text-white/70 hover:text-white hover:bg-white/10"
+                  className="h-7 w-7 sm:h-8 sm:w-8 p-0 text-white/70 hover:text-white hover:bg-white/20 transition-colors flex-shrink-0"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="w-4 h-4 sm:w-5 sm:h-5" />
                 </Button>
               </div>
             </CardContent>
@@ -236,13 +247,13 @@ export function QuestUI() {
           ИНСТРУКЦИЯ ВНИЗУ
           ===================================================== */}
       {!isComplete && (
-        <div className="fixed bottom-4 left-2 right-2 sm:left-3 sm:right-3 z-40">
+        <div className="fixed bottom-4 left-2 right-2 sm:left-3 sm:right-3 md:left-4 md:right-4 z-40">
           <Card className="bg-black/70 backdrop-blur-md border-white/20">
-            <CardContent className="p-2 sm:p-3">
-              <p className="text-white/70 text-xs sm:text-sm text-center">
+            <CardContent className="p-3 sm:p-4">
+              <p className="text-white/70 text-sm sm:text-base md:text-lg text-center">
                 📷 Наведите камеру на объект парка для обнаружения маркера
               </p>
-              <p className="text-amber-400/70 text-xs text-center mt-1">
+              <p className="text-amber-400/70 text-xs sm:text-sm text-center mt-1">
                 💡 Для теста: тапните по экрану для имитации
               </p>
             </CardContent>
