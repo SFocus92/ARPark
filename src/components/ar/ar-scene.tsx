@@ -31,7 +31,7 @@ export function ARScene({ onReady, onError }: ARSceneProps) {
     async function init() {
       try {
         setStatus('Загрузка A-Frame...');
-        await waitForGlobal('AFRAME', 15000);
+        await waitForGlobal('AFRAME', 30000); // Увеличиваем таймаут до 30 секунд
         console.log('[AR] A-Frame готов');
 
         setStatus('Загрузка MindAR...');
@@ -287,11 +287,26 @@ function ErrorScreen({ error }: { error: string }) {
 
 function waitForGlobal(name: string, timeoutMs: number): Promise<void> {
   return new Promise((resolve, reject) => {
+    // Проверяем сразу
+    if ((window as any)[name]) {
+      console.log(`[AR] ${name} уже загружен`);
+      resolve();
+      return;
+    }
+
+    console.log(`[AR] Ожидание ${name}...`);
     const start = Date.now();
     const check = setInterval(() => {
-      if ((window as any)[name]) { clearInterval(check); resolve(); }
-      else if (Date.now() - start > timeoutMs) { clearInterval(check); reject(new Error('Timeout: ' + name)); }
-    }, 100);
+      if ((window as any)[name]) {
+        clearInterval(check);
+        console.log(`[AR] ${name} загружен за ${Date.now() - start}ms`);
+        resolve();
+      } else if (Date.now() - start > timeoutMs) {
+        clearInterval(check);
+        console.error(`[AR] Таймаут ожидания ${name} (${timeoutMs}ms)`);
+        reject(new Error('Timeout: ' + name));
+      }
+    }, 50); // Проверяем каждые 50ms вместо 100ms
   });
 }
 

@@ -83,19 +83,26 @@ export default function QuestApp() {
   } = useQuest();
   
   const [showAR, setShowAR] = useState(false);
-  
+  const [loadingLibs, setLoadingLibs] = useState(false);
+
   // ---------------------------------------------------
   // ОБРАБОТЧИК НАЧАЛА КВЕСТА
   // ---------------------------------------------------
-  
-  const handleStart = useCallback(() => {
-    // Просто запускаем квест - ar-scene загрузит всё сама
+
+  const handleStart = useCallback(async () => {
+    setLoadingLibs(true);
     startQuest();
-    setShowAR(true);
-    
-    // Загружаем A-Frame в фоне
-    loadARLibs().catch(() => {});
-  }, [startQuest]);
+
+    // Загружаем A-Frame и ждём его загрузки
+    try {
+      await loadARLibs();
+      setShowAR(true);
+    } catch (error) {
+      setCameraError('Не удалось загрузить AR библиотеки');
+    } finally {
+      setLoadingLibs(false);
+    }
+  }, [startQuest, setCameraError]);
   
   // ---------------------------------------------------
   // ОБРАБОТЧИК ГОТОВНОСТИ AR
@@ -153,6 +160,18 @@ export default function QuestApp() {
   // Показываем стартовую страницу если квест не начат
   if (!isStarted || !showAR) {
     return <StartPage onStart={handleStart} />;
+  }
+
+  // Показываем экран загрузки библиотек
+  if (loadingLibs) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-black">
+        <div className="text-center text-white">
+          <div className="w-12 h-12 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4"></div>
+          <p>Загрузка AR библиотек...</p>
+        </div>
+      </div>
+    );
   }
   
   // Показываем AR-сцену
