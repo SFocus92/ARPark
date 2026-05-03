@@ -29,11 +29,12 @@ async function loadARLibs(): Promise<boolean> {
   if ((window as any).AFRAME) {
     return true;
   }
-  
+
   console.log('[AR] Загрузка A-Frame...');
   await new Promise<void>((resolve) => {
     const s = document.createElement('script');
-    s.src = 'https://aframe.io/releases/1.4.0/aframe.min.js';
+    // Используем unpkg.com - более быстрый и доступный CDN
+    s.src = 'https://unpkg.com/aframe@1.4.0/dist/aframe-master.min.js';
     s.async = true;
     s.crossOrigin = 'anonymous';
     s.onload = () => {
@@ -43,7 +44,7 @@ async function loadARLibs(): Promise<boolean> {
     s.onerror = () => resolve();
     document.head.appendChild(s);
   });
-  
+
   return true;
 }
 

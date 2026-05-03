@@ -321,8 +321,8 @@ async function loadMindARScript(): Promise<void> {
 
   return new Promise((resolve, reject) => {
     const script = document.createElement('script');
-    // A-Frame версия MindAR
-    script.src = 'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js';
+    // A-Frame версия MindAR - используем unpkg.com для лучшей доступности
+    script.src = 'https://unpkg.com/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js';
     script.type = 'text/javascript';
     script.async = false;
     script.onload = () => {
